@@ -17,7 +17,7 @@ public class ProductController {
     ProductReponsitory productReponsitory;
 
     @GetMapping("/get")
-    public ResponseEntity<?> get(){
+    public ResponseEntity<?> getAllProduct(){
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(productReponsitory.findAll());
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);

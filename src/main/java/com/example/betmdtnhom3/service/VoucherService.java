@@ -48,8 +48,14 @@ public class VoucherService {
         return convertToDTO(voucherRepository.save(voucher));
     }
 
-    public void deleteVoucher(String id) {
+    public boolean deleteVoucher(String id) {
+        Optional<Voucher> optionalVoucher = voucherRepository.findById(id);
+        if (optionalVoucher.isEmpty()) {
+            return false; // Không tìm thấy voucher để xóa
+        }
+
         voucherRepository.deleteById(id);
+        return true; // Xóa thành công
     }
 
     private VoucherDTO convertToDTO(Voucher voucher) {
@@ -79,43 +85,45 @@ public class VoucherService {
     public Map<String, Object> applyVoucher(String id, int totalPrice) {
         Optional<Voucher> optionalVoucher = voucherRepository.findById(id);
         Map<String, Object> response = new HashMap<>();
+
         if (optionalVoucher.isEmpty()) {
-            response.put("status", "FALSE");
+            response.put("success", false);
             response.put("message", "Voucher không tồn tại");
             return response;
         }
 
         Voucher voucher = optionalVoucher.get();
 
-        // Kiểm tra điều kiện 1: totalPrice >= minOrderAmount
+        // Kiểm tra tổng giá trị đơn hàng có đạt yêu cầu không
         if (totalPrice < voucher.getMinOrderAmount()) {
             int neededAmount = voucher.getMinOrderAmount() - totalPrice;
-            response.put("status", "FALSE");
+            response.put("success", false);
             response.put("message", "Bạn cần mua thêm " + neededAmount + " đ để sử dụng voucher");
             return response;
         }
 
-        // Kiểm tra điều kiện 2: Thời gian hợp lệ
+        // Kiểm tra hạn sử dụng
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(voucher.getStartDate()) || (voucher.getEndDate() != null && now.isAfter(voucher.getEndDate()))) {
-            response.put("status", "FALSE");
+            response.put("success", false);
             response.put("message", "Voucher đã hết hạn");
             return response;
         }
 
-        // Kiểm tra điều kiện 3: Số lần sử dụng còn lại
+        // Kiểm tra số lượng sử dụng còn lại
         if (voucher.getUsedCount() >= voucher.getMaxUsage()) {
-            response.put("status", "FALSE");
+            response.put("success", false);
             response.put("message", "Voucher đã được sử dụng hết");
             return response;
         }
 
-        // Nếu tất cả điều kiện thỏa mãn, tăng usedCount và lưu lại
+        // Nếu đủ điều kiện, cập nhật số lần sử dụng
         voucher.setUsedCount(voucher.getUsedCount() + 1);
         voucherRepository.save(voucher);
 
-        response.put("status", "TRUE");
+        response.put("success", true);
         response.put("discountValue", voucher.getDiscountValue());
+        response.put("message", "Áp dụng voucher thành công!");
         return response;
     }
 }

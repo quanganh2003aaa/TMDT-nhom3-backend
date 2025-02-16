@@ -1,28 +1,15 @@
-package com.example.betmdtnhom3.entity;
-
-import jakarta.persistence.*;
+package com.example.betmdtnhom3.dto;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
-@Entity(name = "vouchers")
-public class Voucher {
-    @Id
+public class VoucherDTO {
     private String id;
-    @Column(name = "discount_value",nullable = false)
     private int discountValue;
-    @Column(name = "min_order_amount", nullable = false)
     private int minOrderAmount;
-    @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
-    @Column(name = "end_date")
     private LocalDateTime endDate;
-    @Column(name = "max_usage")
     private int maxUsage;
-    @Column(name = "used_count")
     private int usedCount;
-    @OneToMany(mappedBy = "voucher")
-    private Set<Order> orders;
 
     public String getId() {
         return id;
@@ -78,13 +65,5 @@ public class Voucher {
 
     public void setUsedCount(int usedCount) {
         this.usedCount = usedCount;
-    }
-
-    public Set<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Set<Order> orders) {
-        this.orders = orders;
     }
 }

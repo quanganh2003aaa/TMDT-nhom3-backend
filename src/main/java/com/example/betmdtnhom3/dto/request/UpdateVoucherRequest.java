@@ -7,7 +7,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 public class UpdateVoucherRequest {
-    private String id;
 
     @Min(value = 1, message = "Discount value must be greater than 0")
     private int discountValue;
@@ -28,14 +27,6 @@ public class UpdateVoucherRequest {
 
     @Min(value = 0, message = "Used count cannot be negative")
     private int usedCount;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public int getDiscountValue() {
         return discountValue;

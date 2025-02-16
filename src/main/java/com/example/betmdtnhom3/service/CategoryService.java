@@ -2,8 +2,6 @@ package com.example.betmdtnhom3.service;
 
 import com.example.betmdtnhom3.Enum.ErrorCode;
 import com.example.betmdtnhom3.dto.CategoryDTO;
-import com.example.betmdtnhom3.dto.request.CreateCategoryRequest;
-import com.example.betmdtnhom3.dto.request.UpdateCategoryRequest;
 import com.example.betmdtnhom3.entity.Category;
 import com.example.betmdtnhom3.exception.AppException;
 import com.example.betmdtnhom3.mapper.CategoryMapper;
@@ -21,16 +19,12 @@ public class CategoryService  implements CategoryServiceImpl {
     CategoryReponsitory categoryReponsitory;
     @Autowired
     CategoryMapper categoryMapper;
+
     @Override
-    public Boolean createCategory(CreateCategoryRequest createCategoryRequest) {
+    public Boolean createCategory(String cate) {
         boolean isSuccess = false;
-
-        if (categoryReponsitory.existsById(createCategoryRequest.getId())) {
-            throw new AppException(ErrorCode.CATEGORY_EXITED);
-        }
-
-        Category category = categoryMapper.toCategoryCreate(createCategoryRequest);
-        category.setName(createCategoryRequest.getName());
+        Category category = new Category();
+        category.setName(cate);
 
         try {
             categoryReponsitory.save(category);
@@ -43,12 +37,12 @@ public class CategoryService  implements CategoryServiceImpl {
     }
 
     @Override
-    public Boolean updateCategory(int categoryId, UpdateCategoryRequest updateCategoryRequest) {
+    public Boolean updateCategory(int categoryId, String cate) {
         boolean isSuccess = false;
         try {
-            Category category = categoryReponsitory.findById(String.valueOf(categoryId))
+            Category category = categoryReponsitory.findById(categoryId)
                     .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
-            category.setName(updateCategoryRequest.getName());
+            category.setName(cate);
             categoryReponsitory.save(category);
             isSuccess = true;
         } catch (Exception e) {
@@ -60,10 +54,10 @@ public class CategoryService  implements CategoryServiceImpl {
 
 
     @Override
-    public Boolean deleteCategory(String id) {
+    public Boolean deleteCategory(int id) {
         boolean isSuccess = false;
         try {
-            Category category = categoryReponsitory.findById(String.valueOf(Integer.parseInt(id)))
+            Category category = categoryReponsitory.findById(id)
                     .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
             categoryReponsitory.deleteById(id);
             isSuccess = true;
@@ -78,9 +72,9 @@ public class CategoryService  implements CategoryServiceImpl {
         List<CategoryDTO> categoryDTOList = new ArrayList<>();
         List<Category> categoryList = categoryReponsitory.findAll();
         for (Category category : categoryList) {
-            CategoryDTO categoryDTO = categoryMapper.toCategoryDTO(category);
+            CategoryDTO categoryDTO = categoryMapper.toCateDTO(category);
             categoryDTOList.add(categoryDTO);
-        }
+       }
         return categoryDTOList;
     }
 }

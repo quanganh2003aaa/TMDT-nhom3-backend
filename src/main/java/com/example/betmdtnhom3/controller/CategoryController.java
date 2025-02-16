@@ -1,7 +1,5 @@
 package com.example.betmdtnhom3.controller;
 
-import com.example.betmdtnhom3.dto.request.CreateCategoryRequest;
-import com.example.betmdtnhom3.dto.request.UpdateCategoryRequest;
 import com.example.betmdtnhom3.payload.ApiResponse;
 import com.example.betmdtnhom3.service.impl.CategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,26 +13,26 @@ public class CategoryController {
     @Autowired
     CategoryServiceImpl categoryService;
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody CreateCategoryRequest createCategoryRequest) {
+    public ResponseEntity<?> create(@RequestParam String name) {
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setResult(categoryService.createCategory(createCategoryRequest));
+        apiResponse.setResult(categoryService.createCategory(name));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable String id) {
+    public ResponseEntity<?> delete(@PathVariable int id) {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(categoryService.deleteCategory(id));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable int id, @RequestBody UpdateCategoryRequest updateCategoryRequest) {
+    public ResponseEntity<?> update(@PathVariable int id, @RequestParam String name) {
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setResult(categoryService.updateCategory(id, updateCategoryRequest));
+        apiResponse.setResult(categoryService.updateCategory(id, name));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/admin/getAll")
+    @GetMapping("/getAll")
     public ResponseEntity<?> getAllAdmin(@RequestParam(defaultValue = "", required = false) String query,
                                          @RequestParam(defaultValue = "0", required = false) int select) {
         ApiResponse apiResponse = new ApiResponse();

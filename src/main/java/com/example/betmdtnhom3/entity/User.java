@@ -43,4 +43,108 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Banner> banners;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getGmail() {
+        return gmail;
+    }
+
+    public void setGmail(String gmail) {
+        this.gmail = gmail;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public List<InfoUser> getInfoUsers() {
+        return infoUsers;
+    }
+
+    public void setInfoUsers(List<InfoUser> infoUsers) {
+        this.infoUsers = infoUsers;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public List<InfoStore> getInfoStores() {
+        return infoStores;
+    }
+
+    public void setInfoStores(List<InfoStore> infoStores) {
+        this.infoStores = infoStores;
+    }
+
+    public List<Blog> getBlogs() {
+        return blogs;
+    }
+
+    public void setBlogs(List<Blog> blogs) {
+        this.blogs = blogs;
+    }
+
+    public List<CommentBlog> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentBlog> comments) {
+        this.comments = comments;
+    }
+
+    public List<RateProduct> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<RateProduct> ratings) {
+        this.ratings = ratings;
+    }
+
+    public List<Banner> getBanners() {
+        return banners;
+    }
+
+    public void setBanners(List<Banner> banners) {
+        this.banners = banners;
+    }
 }

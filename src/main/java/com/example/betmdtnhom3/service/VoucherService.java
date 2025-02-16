@@ -62,7 +62,6 @@ public class VoucherService {
                 () -> new AppException(ErrorCode.VOUCHER_NOT_FOUND)
         );
 
-        voucher.setId(updateVoucherRequest.getId());
         voucher.setDiscountValue(updateVoucherRequest.getDiscountValue());
         voucher.setMinOrderAmount(updateVoucherRequest.getMinOrderAmount());
         voucher.setStartDate(updateVoucherRequest.getStartDate());

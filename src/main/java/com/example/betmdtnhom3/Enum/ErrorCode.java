@@ -28,7 +28,6 @@ public enum ErrorCode {
     FILE_UPLOAD_ERROR(8001, "Lỗi thêm ảnh"),
     FILE_DELETE_ERROR(8002, "Lỗi xóa ảnh"),
     UPDATE_STORE_ERROR(7001, "Lỗi sửa thông tin cửa hàng"),
-
     CATEGORY_EXITED(6661, "Danh mục này đã tồn tại"),
     CATEGORY_CREATE_ERROR(6662, "Tạo danh mục thất bại"),
     CATEGORY_UPDATE_ERROR(6663, "Sửa danh mục thất bại"),

@@ -1,5 +1,5 @@
-package com.example.betmdtnhom3.dto;
-
-public class InfoStoreDTO {
-
-}
+//package com.example.betmdtnhom3.dto;
+//
+//public class InfoStoreDTO {
+//
+//}

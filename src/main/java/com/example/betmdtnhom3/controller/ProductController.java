@@ -23,14 +23,6 @@ public class ProductController {
     public ResponseEntity<?> create(@RequestParam("files") List<MultipartFile> files,
                                     @ModelAttribute CreateProductRequest createProductRequest){
 
-//        CreateProductRequest createProductRequest = new CreateProductRequest();
-//        createProductRequest.setId(id);
-//        createProductRequest.setName(name);
-//        createProductRequest.setSize(size);
-//        createProductRequest.setPrice(price);
-//        createProductRequest.setQuantity(quantity);
-//        createProductRequest.setDescription(description);
-//        createProductRequest.setCategory(category);
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(productService.create(files, createProductRequest));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -47,17 +39,6 @@ public class ProductController {
     public ResponseEntity<?> update(@PathVariable String id,
                                     @RequestParam("files") List<MultipartFile> files,
                                     @ModelAttribute UpdateProductRequest updateProductRequest){
-
-//        UpdateProductRequest updateProductRequest = new UpdateProductRequest();
-//        updateProductRequest.setName(name);
-//        updateProductRequest.setSize(size);
-//        updateProductRequest.setPrice(price);
-//        updateProductRequest.setQuantity(quantity);
-//        updateProductRequest.setDescription(description);
-//        updateProductRequest.setCategory(category);
-//        if (file != null && !file.isEmpty()) {
-//            updateProductRequest.setImg(file.getOriginalFilename());
-//        }
 
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(productService.update(id, files, updateProductRequest));

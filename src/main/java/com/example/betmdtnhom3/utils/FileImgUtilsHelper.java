@@ -24,12 +24,12 @@ public class FileImgUtilsHelper {
         List<ImgProduct> oldImages = imgProductReponsitory.findAllByProduct(product);
         List<String> oldImageNames = oldImages.stream()
                 .map(ImgProduct::getImg)
-                .filter(img -> img != null) // Tránh lỗi null
+                .filter(img -> img != null)
                 .collect(Collectors.toList());
 
         List<String> newImageNames = newImages.stream()
                 .map(MultipartFile::getOriginalFilename)
-                .filter(img -> img != null && !img.isEmpty()) // Tránh null & rỗng
+                .filter(img -> img != null && !img.isEmpty())
                 .collect(Collectors.toList());
 
         List<String> imagesToDelete = oldImageNames.stream()

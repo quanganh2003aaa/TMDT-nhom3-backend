@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/brands")
+@RequestMapping("/api/brand")
 public class BrandController {
     @Autowired
     private BrandService brandService;
 
-    @GetMapping
+    @GetMapping("/getAll")
     public List<BrandDTO> getAllBrands() {
         return brandService.getAllBrands();
     }

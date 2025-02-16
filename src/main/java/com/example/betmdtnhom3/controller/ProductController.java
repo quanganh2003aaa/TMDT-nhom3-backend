@@ -44,5 +44,13 @@ public class ProductController {
         apiResponse.setResult(productService.update(id, files, updateProductRequest));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+    @GetMapping("/admin/getAll")
+    public ResponseEntity<?> getAllAdmin(@RequestParam(defaultValue = "", required = false) String query,
+                                         @RequestParam(defaultValue = "0", required = false) int select){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(productService.getAll(query, select));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
     
 }

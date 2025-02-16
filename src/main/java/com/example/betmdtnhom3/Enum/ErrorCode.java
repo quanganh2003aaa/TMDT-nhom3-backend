@@ -25,6 +25,7 @@ public enum ErrorCode {
     USER_RATE_EXISTED(3005, "Bạn đã đánh giá sản phẩm 1 lần"),
     FILE_UPLOAD_ERROR(8001, "Lỗi thêm ảnh"),
     FILE_DELETE_ERROR(8002, "Lỗi xóa ảnh"),
+    UPDATE_STORE_ERROR(7001, "Lỗi sửa thông tin cửa hàng"),
     ;
     private int code;
     private String message;

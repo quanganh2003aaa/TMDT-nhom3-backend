@@ -1,6 +1,7 @@
 package com.example.betmdtnhom3.service;
 
 import com.example.betmdtnhom3.Enum.ErrorCode;
+import com.example.betmdtnhom3.dto.ProductDTO;
 import com.example.betmdtnhom3.dto.request.CreateProductRequest;
 import com.example.betmdtnhom3.dto.request.UpdateProductRequest;
 import com.example.betmdtnhom3.entity.*;
@@ -131,5 +132,16 @@ public class ProductService implements ProductServiceImpl {
         }
 
         return isSuccess;
+    }
+
+    @Override
+    public List<ProductDTO> getAll(String query, int select) {
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        List<Product> productList = productReponsitory.findAll();
+        for (Product pro: productList) {
+            ProductDTO productDTO = productMapper.toProductDTO(pro);
+            productDTOList.add(productDTO);
+        }
+        return productDTOList;
     }
 }

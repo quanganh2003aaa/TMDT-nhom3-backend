@@ -8,5 +8,6 @@ import com.example.betmdtnhom3.entity.User;
 import java.util.List;
 
 public interface UserServiceImpl {
-    
+    Boolean createUser(SignUpRequest signUpRequest);
+    UserDTO login(AuthenticationRequest authenticationRequest);
 }

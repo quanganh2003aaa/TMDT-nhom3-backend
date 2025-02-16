@@ -39,4 +39,100 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<CartUser> cartUsers;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
+    }
+
+    public List<DetailOrder> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<DetailOrder> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
+    public List<RateProduct> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<RateProduct> ratings) {
+        this.ratings = ratings;
+    }
+
+    public List<Size> getSizes() {
+        return sizes;
+    }
+
+    public void setSizes(List<Size> sizes) {
+        this.sizes = sizes;
+    }
+
+    public List<ImgProduct> getImgProducts() {
+        return imgProducts;
+    }
+
+    public void setImgProducts(List<ImgProduct> imgProducts) {
+        this.imgProducts = imgProducts;
+    }
+
+    public List<CartUser> getCartUsers() {
+        return cartUsers;
+    }
+
+    public void setCartUsers(List<CartUser> cartUsers) {
+        this.cartUsers = cartUsers;
+    }
 }

@@ -8,7 +8,6 @@ import java.util.Set;
 @Entity(name = "vouchers")
 public class Voucher {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     @Column(name = "discount_value",nullable = false)
     private int discountValue;

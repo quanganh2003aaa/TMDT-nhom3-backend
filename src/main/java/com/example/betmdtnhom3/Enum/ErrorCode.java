@@ -23,6 +23,8 @@ public enum ErrorCode {
     CONTENT_RATE_ERROR(3003, "Nội dung đánh giá quá dài"),
     USER_RATE_ERROR(3004, "Bạn chưa được đánh giá sản phẩm"),
     USER_RATE_EXISTED(3005, "Bạn đã đánh giá sản phẩm 1 lần"),
+    FILE_UPLOAD_ERROR(8001, "Lỗi thêm ảnh"),
+    FILE_DELETE_ERROR(8002, "Lỗi xóa ảnh"),
     ;
     private int code;
     private String message;

@@ -1,9 +1,13 @@
 package com.example.betmdtnhom3.dto;
 
+import java.util.List;
+
 public class ProductDTO {
     private String id;
     private String name;
-    private String img;
+    private List<String> img;
+    private String brand;
+    private String category;
     private int price;
     private int quantity;
     private String description;
@@ -24,12 +28,28 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public String getImg() {
+    public List<String> getImg() {
         return img;
     }
 
-    public void setImg(String img) {
+    public void setImg(List<String> img) {
         this.img = img;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public int getPrice() {

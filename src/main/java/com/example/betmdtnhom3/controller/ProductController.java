@@ -5,6 +5,7 @@ import com.example.betmdtnhom3.dto.request.UpdateProductRequest;
 import com.example.betmdtnhom3.payload.ApiResponse;
 import com.example.betmdtnhom3.responsitory.ProductReponsitory;
 import com.example.betmdtnhom3.service.impl.ProductServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class ProductController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestParam("files") List<MultipartFile> files,
-                                    @ModelAttribute CreateProductRequest createProductRequest){
+                                    @ModelAttribute @Valid CreateProductRequest createProductRequest){
 
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(productService.create(files, createProductRequest));

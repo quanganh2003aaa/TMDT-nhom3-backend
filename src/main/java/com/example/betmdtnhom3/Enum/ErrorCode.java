@@ -16,6 +16,8 @@ public enum ErrorCode {
     PRODUCT_UPDATE_ERROR(1113, "Sửa sản phẩm thất bại"),
     PRODUCT_DELETE_ERROR(1114, "Xóa sản phẩm thất bại"),
     PRODUCT_NOT_FOUND(1404, "Sản phẩm không tồn tại"),
+    BRAND_NOT_FOUND(1405, "Thương hiệu không tồn tại"),
+    VOUCHER_NOT_FOUND(1406, "Mã giảm giá không tồn tại"),
     ORDER_CREATE_ERROR(2111, "Đặt hàng thất bại"),
     ORDER_ERROR(2112, "Thao tác với đơn hàng bị lỗi"),
     CREATE_RATE_ERROR(3001, "Lỗi khi đánh giá sản phẩm"),

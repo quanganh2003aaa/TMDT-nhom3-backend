@@ -1,16 +1,14 @@
 package com.example.betmdtnhom3.controller;
 
-import com.example.betmdtnhom3.dto.VoucherDTO;
+import com.example.betmdtnhom3.dto.request.CreateVoucherRequest;
+import com.example.betmdtnhom3.dto.request.UpdateVoucherRequest;
 import com.example.betmdtnhom3.payload.ApiResponse;
 import com.example.betmdtnhom3.service.VoucherService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/voucher")
@@ -33,36 +31,24 @@ public class VoucherController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createVoucher(@RequestBody VoucherDTO dto) {
+    public ResponseEntity<?> createVoucher(@RequestBody @Valid CreateVoucherRequest createVoucherRequest) {
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setResult(voucherService.createVoucher(dto));
+        apiResponse.setResult(voucherService.createVoucher(createVoucherRequest));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateVoucher(@PathVariable String id, @RequestBody VoucherDTO voucherDTO) {
+    public ResponseEntity<?> updateVoucher(@PathVariable String id, @RequestBody @Valid UpdateVoucherRequest updateVoucherRequest) {
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setResult(voucherService.updateVoucher(id, voucherDTO));
+        apiResponse.setResult(voucherService.updateVoucher(id, updateVoucherRequest));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteVoucher(@PathVariable String id) {
-        boolean isDeleted = voucherService.deleteVoucher(id);
-        if (isDeleted) {
-            return ResponseEntity.ok(Map.of("message", "Xóa voucher thành công"));
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Voucher không tồn tại"));
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(voucherService.deleteVoucher(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/apply")
-    public ResponseEntity<?> applyVoucher(@RequestParam String id, @RequestParam int totalPrice) {
-        Map<String, Object> result = voucherService.applyVoucher(id, totalPrice);
-
-        if ((boolean) result.get("success")) {
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-        }
-    }
 }

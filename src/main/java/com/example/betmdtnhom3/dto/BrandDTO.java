@@ -5,7 +5,6 @@ import java.util.List;
 public class BrandDTO {
     private int id;
     private String name;
-    private List<String> Products;
 
     public int getId() {
         return id;
@@ -21,13 +20,5 @@ public class BrandDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<String> getProducts() {
-        return Products;
-    }
-
-    public void setProducts(List<String> products) {
-        Products = products;
     }
 }

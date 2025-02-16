@@ -1,129 +1,95 @@
 package com.example.betmdtnhom3.service;
 
+import com.example.betmdtnhom3.Enum.ErrorCode;
+import com.example.betmdtnhom3.dto.BrandDTO;
 import com.example.betmdtnhom3.dto.VoucherDTO;
+import com.example.betmdtnhom3.dto.request.CreateVoucherRequest;
+import com.example.betmdtnhom3.dto.request.UpdateVoucherRequest;
+import com.example.betmdtnhom3.entity.Brand;
+import com.example.betmdtnhom3.exception.AppException;
+import com.example.betmdtnhom3.mapper.VoucherMapper;
 import com.example.betmdtnhom3.responsitory.VoucherReponsitory;
 import com.example.betmdtnhom3.entity.Voucher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class VoucherService {
     @Autowired
     private VoucherReponsitory voucherRepository;
+    @Autowired
+    VoucherMapper voucherMapper;
 
     public List<VoucherDTO> getAllVouchers() {
-        return voucherRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+        List<VoucherDTO> voucherDTOList = new ArrayList<>();
+        List<Voucher> voucherList = voucherRepository.findAll();
+        for (Voucher voucher:voucherList) {
+            VoucherDTO voucherDTO = voucherMapper.toVoucherDTO(voucher);
+            voucherDTOList.add(voucherDTO);
+        }
+        return voucherDTOList;
     }
 
-    public Optional<VoucherDTO> getVoucherById(String id) {
-        return voucherRepository.findById(id).map(this::convertToDTO);
+    public VoucherDTO getVoucherById(String id) {
+        Voucher voucher = voucherRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.VOUCHER_NOT_FOUND)
+        );
+        return voucherMapper.toVoucherDTO(voucher);
     }
 
-    public VoucherDTO createVoucher(VoucherDTO dto) {
-        Voucher voucher = convertToEntity(dto);
-        return convertToDTO(voucherRepository.save(voucher));
-    }
+    public boolean createVoucher(CreateVoucherRequest createVoucherRequest) {
+        boolean isSuccess = false;
 
-    public VoucherDTO updateVoucher(String id, VoucherDTO dto) {
-        Optional<Voucher> optionalVoucher = voucherRepository.findById(id);
-        if (optionalVoucher.isEmpty()) {
-            throw new RuntimeException("Voucher không tồn tại");
+        try {
+            Voucher voucher = voucherMapper.toVoucherCreate(createVoucherRequest);
+            voucher.setUsedCount(0);
+            voucherRepository.save(voucher);
+            isSuccess = true;
+        } catch (Exception e){
+            throw new AppException(ErrorCode.ERROR_OTHER);
         }
 
-        Voucher voucher = optionalVoucher.get();
-        voucher.setDiscountValue(dto.getDiscountValue());
-        voucher.setMinOrderAmount(dto.getMinOrderAmount());
-        voucher.setStartDate(dto.getStartDate());
-        voucher.setEndDate(dto.getEndDate());
-        voucher.setMaxUsage(dto.getMaxUsage());
-        voucher.setUsedCount(dto.getUsedCount());
+        return isSuccess;
+    }
 
-        return convertToDTO(voucherRepository.save(voucher));
+    public boolean updateVoucher(String id, UpdateVoucherRequest updateVoucherRequest) {
+        boolean isSuccess = false;
+        Voucher voucher = voucherRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.VOUCHER_NOT_FOUND)
+        );
+
+        voucher.setId(updateVoucherRequest.getId());
+        voucher.setDiscountValue(updateVoucherRequest.getDiscountValue());
+        voucher.setMinOrderAmount(updateVoucherRequest.getMinOrderAmount());
+        voucher.setStartDate(updateVoucherRequest.getStartDate());
+        voucher.setEndDate(updateVoucherRequest.getEndDate());
+        voucher.setMaxUsage(updateVoucherRequest.getMaxUsage());
+        voucher.setUsedCount(updateVoucherRequest.getUsedCount());
+
+        try {
+            voucherRepository.save(voucher);
+            isSuccess = true;
+        } catch (Exception e){
+            throw new AppException(ErrorCode.ERROR_OTHER);
+        }
+
+        return isSuccess;
     }
 
     public boolean deleteVoucher(String id) {
-        Optional<Voucher> optionalVoucher = voucherRepository.findById(id);
-        if (optionalVoucher.isEmpty()) {
-            return false; // Không tìm thấy voucher để xóa
+        boolean isSuccess = false;
+        try {
+            voucherRepository.deleteById(id);
+            isSuccess = true;
+        } catch (Exception e){
+            throw new AppException(ErrorCode.ERROR_OTHER);
         }
-
-        voucherRepository.deleteById(id);
-        return true; // Xóa thành công
+        return isSuccess;
     }
 
-    private VoucherDTO convertToDTO(Voucher voucher) {
-        VoucherDTO dto = new VoucherDTO();
-        dto.setId(voucher.getId());
-        dto.setDiscountValue(voucher.getDiscountValue());
-        dto.setMinOrderAmount(voucher.getMinOrderAmount());
-        dto.setStartDate(voucher.getStartDate());
-        dto.setEndDate(voucher.getEndDate());
-        dto.setMaxUsage(voucher.getMaxUsage());
-        dto.setUsedCount(voucher.getUsedCount());
-        return dto;
-    }
 
-    private Voucher convertToEntity(VoucherDTO dto) {
-        Voucher voucher = new Voucher();
-        voucher.setId(dto.getId());
-        voucher.setDiscountValue(dto.getDiscountValue());
-        voucher.setMinOrderAmount(dto.getMinOrderAmount());
-        voucher.setStartDate(dto.getStartDate());
-        voucher.setEndDate(dto.getEndDate());
-        voucher.setMaxUsage(dto.getMaxUsage());
-        voucher.setUsedCount(dto.getUsedCount());
-        return voucher;
-    }
-
-    public Map<String, Object> applyVoucher(String id, int totalPrice) {
-        Optional<Voucher> optionalVoucher = voucherRepository.findById(id);
-        Map<String, Object> response = new HashMap<>();
-
-        if (optionalVoucher.isEmpty()) {
-            response.put("success", false);
-            response.put("message", "Voucher không tồn tại");
-            return response;
-        }
-
-        Voucher voucher = optionalVoucher.get();
-
-        // Kiểm tra tổng giá trị đơn hàng có đạt yêu cầu không
-        if (totalPrice < voucher.getMinOrderAmount()) {
-            int neededAmount = voucher.getMinOrderAmount() - totalPrice;
-            response.put("success", false);
-            response.put("message", "Bạn cần mua thêm " + neededAmount + " đ để sử dụng voucher");
-            return response;
-        }
-
-        // Kiểm tra hạn sử dụng
-        LocalDateTime now = LocalDateTime.now();
-        if (now.isBefore(voucher.getStartDate()) || (voucher.getEndDate() != null && now.isAfter(voucher.getEndDate()))) {
-            response.put("success", false);
-            response.put("message", "Voucher đã hết hạn");
-            return response;
-        }
-
-        // Kiểm tra số lượng sử dụng còn lại
-        if (voucher.getUsedCount() >= voucher.getMaxUsage()) {
-            response.put("success", false);
-            response.put("message", "Voucher đã được sử dụng hết");
-            return response;
-        }
-
-        // Nếu đủ điều kiện, cập nhật số lần sử dụng
-        voucher.setUsedCount(voucher.getUsedCount() + 1);
-        voucherRepository.save(voucher);
-
-        response.put("success", true);
-        response.put("discountValue", voucher.getDiscountValue());
-        response.put("message", "Áp dụng voucher thành công!");
-        return response;
-    }
 }

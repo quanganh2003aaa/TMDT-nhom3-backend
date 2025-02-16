@@ -1,14 +1,11 @@
 package com.example.betmdtnhom3.controller;
 
-import com.example.betmdtnhom3.dto.BrandDTO;
+import com.example.betmdtnhom3.payload.ApiResponse;
 import com.example.betmdtnhom3.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/brand")
@@ -17,32 +14,39 @@ public class BrandController {
     private BrandService brandService;
 
     @GetMapping("/getAll")
-    public List<BrandDTO> getAllBrands() {
-        return brandService.getAllBrands();
+    public ResponseEntity<?> getAllBrand(){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(brandService.getAllBrands());
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public Optional<BrandDTO> getBrandById(@PathVariable int id) {
-        return brandService.getBrandById(id);
+    public ResponseEntity<?> getById(@PathVariable int id,
+                                    @RequestParam String name) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(brandService.update(id, name));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PostMapping
-    public BrandDTO createBrand(@RequestBody BrandDTO brandDTO) {
-        return brandService.createBrand(brandDTO);
+    @PostMapping("/create")
+    public ResponseEntity<?> create(@RequestParam String name) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(brandService.create(name));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteBrand(@PathVariable int id) {
-        return brandService.deleteBrand(id);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable int id) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(brandService.delete(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateBrand(@PathVariable int id, @RequestBody BrandDTO dto) {
-        Optional<BrandDTO> updatedBrand = brandService.updateBrand(id, dto);
-        if (updatedBrand.isPresent()) {
-            return ResponseEntity.ok(updatedBrand.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Brand không tồn tại");
-        }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable int id,
+                                    @RequestParam String name) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(brandService.update(id, name));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }

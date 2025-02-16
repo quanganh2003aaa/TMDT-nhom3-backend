@@ -1,7 +1,6 @@
 package com.example.betmdtnhom3.dto.request;
 
-public class CreateProductRequest {
-    private String id;
+public class UpdateProductRequest {
     private String name;
     private String size;
     private int price;
@@ -9,14 +8,6 @@ public class CreateProductRequest {
     private String description;
     private int category;
     private int brand;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

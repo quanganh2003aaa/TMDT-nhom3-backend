@@ -10,3 +10,5 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+fileUpload:
+  rootPath: C:\Users\My Computer\OneDrive\Desktop\TMDT\Images\product

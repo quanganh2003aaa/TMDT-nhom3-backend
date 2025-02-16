@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: "jdbc:mysql://localhost:3306/tmdtnhom3"
+    url: "jdbc:mysql://localhost:3307/tmdtnhom3"
     username: root
-    password: trang273@
+    password: gungun2k3
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect

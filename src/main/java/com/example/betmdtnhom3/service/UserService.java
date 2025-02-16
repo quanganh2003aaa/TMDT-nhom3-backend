@@ -26,38 +26,40 @@ public class UserService implements UserServiceImpl {
     UserMapper userMapper;
 
     @Override
-    public Boolean createUser(SignUpRequest signUpRequest){
-        boolean isSucces = false;
+    public Boolean createUser(SignUpRequest signUpRequest) {
+        boolean isSuccess = false;
 
-        Optional<User> userExisted = userReponsitory.findByTel(signUpRequest.getTel());
-        if(!userExisted.isPresent()){
+        Optional<User> usersExisted = userReponsitory.findByTel(signUpRequest.getTel());
+        if (!usersExisted.isPresent()){
             User user = new User();
             user.setName(signUpRequest.getName());
 
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-            user.setPassword((passwordEncoder.encode(signUpRequest.getPassword())));
+            user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
             user.setTel(signUpRequest.getTel());
             user.setGmail(signUpRequest.getGmail());
             user.setRole(Role.USER);
-            try{
+            try {
                 userReponsitory.save(user);
-                isSucces = true;
+                isSuccess = true;
             } catch (Exception e){
                 throw new AppException(ErrorCode.ERROR_OTHER);
             }
-        } else {
+        }else {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-        return isSucces;
+
+        return isSuccess;
     }
 
     @Override
-    public UserDTO login(AuthenticationRequest authenticationRequest){
+    public UserDTO login(AuthenticationRequest authenticationRequest) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        var user = userReponsitory.findByTel(authenticationRequest.getTel()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        var user = userReponsitory.findByTel(authenticationRequest.getTel())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         boolean authenticate = passwordEncoder.matches(authenticationRequest.getPassword(), user.getPassword());
-        if(!authenticate){
+        if (!authenticate){
             throw new AppException(ErrorCode.AUTHENTICATED);
         }
 

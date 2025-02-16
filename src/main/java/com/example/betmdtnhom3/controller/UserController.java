@@ -30,7 +30,7 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest request){
         ApiResponse apiResponse = new ApiResponse();
         var result = userService.login(request);
-        apiResponse.setResult((result));
+        apiResponse.setResult(result);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }

@@ -16,5 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/user")
 public class UserController {
+    @Autowired
+    UserServiceImpl userService;
 
+    @PostMapping("/create")
+    public ResponseEntity<?> createUser(@RequestBody @Valid SignUpRequest signUpRequest){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(userService.createUser(signUpRequest));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest request){
+        ApiResponse apiResponse = new ApiResponse();
+        var result = userService.login(request);
+        apiResponse.setResult((result));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 }

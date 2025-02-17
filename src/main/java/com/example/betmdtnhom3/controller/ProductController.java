@@ -50,8 +50,37 @@ public class ProductController {
     public ResponseEntity<?> getAllAdmin(@RequestParam(defaultValue = "", required = false) String query,
                                          @RequestParam(defaultValue = "0", required = false) int select){
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setResult(productService.getAll(query, select));
+        apiResponse.setResult(productService.getAllAdmin(query, select));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-    
+
+    @GetMapping("/getCategory")
+    public ResponseEntity<?> getCategory(@RequestParam(defaultValue = "1", required = false) int category,
+                                        @RequestParam(defaultValue = "1", required = false) int page,
+                                        @RequestParam(defaultValue = "0", required = false) int filterSort,
+                                        @RequestParam(defaultValue = "0", required = false) int filterPrice){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(productService.getByCategory(category, page, filterSort, filterPrice));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/getBrand")
+    public ResponseEntity<?> getBrand(@RequestParam(defaultValue = "1", required = false) int brand,
+                                         @RequestParam(defaultValue = "1", required = false) int page,
+                                         @RequestParam(defaultValue = "0", required = false) int filterSort,
+                                         @RequestParam(defaultValue = "0", required = false) int filterPrice){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(productService.getByBrand(brand, page, filterSort, filterPrice));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/getProduct")
+    public ResponseEntity<?> getProduct(@RequestParam(defaultValue = "1", required = false) int page,
+                                        @RequestParam(defaultValue = "0", required = false) int filterSort,
+                                        @RequestParam(defaultValue = "0", required = false) int filterPrice,
+                                        @RequestParam(defaultValue = "", required = false) String query){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(productService.getProduct(page, filterSort, filterPrice, query));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 }

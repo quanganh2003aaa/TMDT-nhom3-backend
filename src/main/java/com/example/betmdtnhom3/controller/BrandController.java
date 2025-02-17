@@ -21,10 +21,9 @@ public class BrandController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable int id,
-                                    @RequestParam String name) {
+    public ResponseEntity<?> getById(@PathVariable int id) {
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setResult(brandService.update(id, name));
+        apiResponse.setResult(brandService.getBrandById(id));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

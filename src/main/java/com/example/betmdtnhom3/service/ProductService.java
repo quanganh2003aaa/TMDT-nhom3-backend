@@ -1,21 +1,29 @@
 package com.example.betmdtnhom3.service;
 
 import com.example.betmdtnhom3.Enum.ErrorCode;
+import com.example.betmdtnhom3.dto.ImgProductDTO;
 import com.example.betmdtnhom3.dto.ProductDTO;
+import com.example.betmdtnhom3.dto.SizeDTO;
 import com.example.betmdtnhom3.dto.request.CreateProductRequest;
+import com.example.betmdtnhom3.dto.request.PagenationDTO;
 import com.example.betmdtnhom3.dto.request.UpdateProductRequest;
 import com.example.betmdtnhom3.entity.*;
 import com.example.betmdtnhom3.exception.AppException;
 import com.example.betmdtnhom3.mapper.ProductMapper;
 import com.example.betmdtnhom3.responsitory.ImgProductReponsitory;
 import com.example.betmdtnhom3.responsitory.ProductReponsitory;
+import com.example.betmdtnhom3.responsitory.RateProductReponsitory;
 import com.example.betmdtnhom3.responsitory.SizeReponsitory;
 import com.example.betmdtnhom3.service.impl.FileServiceImpl;
 import com.example.betmdtnhom3.service.impl.ProductServiceImpl;
 import com.example.betmdtnhom3.utils.FileImgUtilsHelper;
+import com.example.betmdtnhom3.utils.RateUtilsHelper;
 import com.example.betmdtnhom3.utils.SizeUtilsHelper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,6 +46,10 @@ public class ProductService implements ProductServiceImpl {
     ImgProductReponsitory imgProductReponsitory;
     @Autowired
     FileImgUtilsHelper fileImgUtilsHelper;
+    @Autowired
+    RateUtilsHelper rateUtilsHelper;
+    @Autowired
+    RateProductReponsitory rateProductReponsitory;
 
     @Override
     @Transactional
@@ -135,13 +147,259 @@ public class ProductService implements ProductServiceImpl {
     }
 
     @Override
-    public List<ProductDTO> getAll(String query, int select) {
+    public ProductDTO getById(String id) {
+        Product products = productReponsitory.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        ProductDTO productDTO = productMapper.toProductDTO(products);
+        List<Size> sizesList = sizeReponsitory.findAllByProduct(products);
+
+        if (sizesList.isEmpty()){
+            productDTO.setSizeDTOList(null);
+        } else{
+            List<SizeDTO> sizeDTOList = new ArrayList<>();
+            for (Size size:sizesList) {
+                SizeDTO sizeDTO = new SizeDTO();
+                sizeDTO.setSize(size.getSize());
+                sizeDTOList.add(sizeDTO);
+            }
+            productDTO.setSizeDTOList(sizeDTOList);
+        }
+
+        List<ImgProduct> imgProductList = imgProductReponsitory.findAllByProduct(products);
+        if (imgProductList.isEmpty()){
+            productDTO.setImg(null);
+        } else{
+            List<ImgProductDTO> imgProductDTOS = new ArrayList<>();
+            for (ImgProduct img:imgProductList) {
+                ImgProductDTO imgProductDTO = new ImgProductDTO();
+                imgProductDTO.setImg(img.getImg());
+                imgProductDTOS.add(imgProductDTO);
+            }
+            productDTO.setImg(imgProductDTOS);
+        }
+
+        List<RateProduct> rateProductList = rateProductReponsitory.findAllByProduct(products);
+        int totalRate = 0;
+        for (RateProduct rateList:rateProductList) {
+            totalRate += rateList.getRate();
+        }
+        Double rate =  (totalRate /(double) rateProductList.size());
+        productDTO.setRate(rate);
+
+        return productDTO;
+    }
+
+    @Override
+    public List<ProductDTO> getAllAdmin(String query, int select) {
+        Pageable pageable = PageRequest.of(0, 12);
+        Page<Product> productsList;
+        switch (select) {
+            case 0 -> productsList = productReponsitory.findByPartialIdProduct(query, pageable);
+            case 1 -> productsList = productReponsitory.findByPartialIdProductAndCategory(query, 1, pageable);
+            case 2 -> productsList = productReponsitory.findByPartialIdProductAndCategory(query, 2, pageable);
+            case 3 -> productsList = productReponsitory.findByPartialIdProductAndCategory(query, 3, pageable);
+            case 4 -> productsList = productReponsitory.findByPartialIdProductQuantityLessThan(query, pageable);
+            case 5 -> productsList = productReponsitory.findByPartialIdProductOrderByPriceAsc(query, pageable);
+            case 6 -> productsList = productReponsitory.findByPartialIdProductOrderByPriceDesc(query, pageable);
+            default -> throw new IllegalArgumentException("Lỗi lựa chọn: " + select);
+        }
+
         List<ProductDTO> productDTOList = new ArrayList<>();
-        List<Product> productList = productReponsitory.findAll();
-        for (Product pro: productList) {
-            ProductDTO productDTO = productMapper.toProductDTO(pro);
+        for (Product product : productsList.getContent()) {
+            ProductDTO productDTO = productMapper.toProductDTO(product);
+            productDTO.setRate(rateUtilsHelper.getRate(product));
             productDTOList.add(productDTO);
         }
+
         return productDTOList;
+    }
+
+    @Override
+    public List<ProductDTO> getAllUser(String query, int select) {
+        return null;
+    }
+
+    @Override
+    public List<ProductDTO> getIndex() {
+        List<Product> randomProducts = productReponsitory.findRandomProducts();
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        for (Product product : randomProducts) {
+            ProductDTO productDTO = productMapper.toProductDTO(product);
+            productDTO.setRate(rateUtilsHelper.getRate(product));
+            productDTOList.add(productDTO);
+        }
+
+        return productDTOList;
+    }
+
+    @Override
+    public PagenationDTO getProduct(int page, int filterSort, int filterPrice, String query) {
+        Pageable pageable = PageRequest.of(page - 1, 12);
+        PagenationDTO pagenationDTO = new PagenationDTO();
+        Page<Product> productsPage = null;
+
+        if (filterSort == 0){
+            productsPage = switch (filterPrice) {
+                case 1 -> productReponsitory.findByPartialIdProductAndPriceBetween
+                        (query, 0, 5000000, pageable);
+                case 2 -> productReponsitory.findByPartialIdProductAndPriceBetween
+                        (query, 5000000, 10000000, pageable);
+                case 3 -> productReponsitory.findByPartialIdProductAndPriceBetween
+                        (query, 10000000, 20000000, pageable);
+                case 4 -> productReponsitory.findByPartialIdProductAndPriceBetween
+                        (query, 20000000, 1000000000, pageable);
+                default -> productReponsitory.findByPartialIdProduct(query, pageable);
+            };
+        } else if (filterSort == 1) {
+            productsPage = switch (filterPrice) {
+                case 1 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceAsc
+                        (query, 0, 5000000, pageable);
+                case 2 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceAsc
+                        (query, 5000000, 10000000, pageable);
+                case 3 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceAsc
+                        (query ,10000000, 20000000, pageable);
+                case 4 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceAsc
+                        (query ,20000000, 1000000000, pageable);
+                default -> productReponsitory.findByPartialIdProductOrderByPriceAsc(query, pageable);
+            };
+        } else {
+            productsPage = switch (filterPrice) {
+                case 1 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceDesc
+                        (query,0, 5000000, pageable);
+                case 2 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceDesc
+                        (query, 5000000, 10000000, pageable);
+                case 3 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceDesc
+                        (query,10000000, 20000000, pageable);
+                case 4 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceDesc
+                        (query,20000000, 1000000000, pageable);
+                default -> productReponsitory.findByPartialIdProductOrderByPriceDesc(query, pageable);
+            };
+        }
+
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        for (Product products : productsPage) {
+            ProductDTO productDTO = productMapper.toProductDTO(products);
+            productDTO.setRate(rateUtilsHelper.getRate(products));
+            productDTOList.add(productDTO);
+        }
+        pagenationDTO.setTotalPages(productsPage.getTotalPages());
+        pagenationDTO.setObjectList(productDTOList);
+
+        return pagenationDTO;
+    }
+
+    @Override
+    public PagenationDTO getByCategory(int category, int page, int filterSort, int filterPrice) {
+        Category categories = new Category();
+        categories.setId(category);
+        Pageable pageable = PageRequest.of(page - 1, 12);
+        PagenationDTO pagenationDTO = new PagenationDTO();
+        Page<Product> productsPage = null;
+
+        if (filterSort == 0){
+            productsPage = switch (filterPrice) {
+                case 1 -> productReponsitory.findByCategoryAndPriceBetween
+                        (category, 0, 5000000, pageable);
+                case 2 -> productReponsitory.findByCategoryAndPriceBetween
+                        (category,5000000, 10000000, pageable);
+                case 3 -> productReponsitory.findByCategoryAndPriceBetween
+                        (category,10000000, 20000000, pageable);
+                case 4 -> productReponsitory.findByCategoryAndPriceBetween
+                        (category,20000000, 1000000000, pageable);
+                default -> productReponsitory.findAllByCategory(categories, pageable);
+            };
+        } else if (filterSort == 1) {
+            productsPage = switch (filterPrice) {
+                case 1 -> productReponsitory.findByCategoryAndPriceBetweenOrderByPriceAsc
+                        (category, 0, 5000000, pageable);
+                case 2 -> productReponsitory.findByCategoryAndPriceBetweenOrderByPriceAsc
+                        (category, 5000000, 10000000, pageable);
+                case 3 -> productReponsitory.findByCategoryAndPriceBetweenOrderByPriceAsc
+                        (category, 10000000, 20000000, pageable);
+                case 4 -> productReponsitory.findByCategoryAndPriceBetweenOrderByPriceAsc
+                        (category, 20000000, 1000000000, pageable);
+                default -> productReponsitory.findByCategoryOrderByPriceAsc(category, pageable);
+            };
+        } else {
+            productsPage = switch (filterPrice) {
+                case 1 -> productReponsitory.findByCategoryAndPriceBetweenOrderByPriceDesc
+                        (category,0, 5000000, pageable);
+                case 2 -> productReponsitory.findByCategoryAndPriceBetweenOrderByPriceDesc
+                        (category, 5000000, 10000000, pageable);
+                case 3 -> productReponsitory.findByCategoryAndPriceBetweenOrderByPriceDesc
+                        (category,10000000, 20000000, pageable);
+                case 4 -> productReponsitory.findByCategoryAndPriceBetweenOrderByPriceDesc
+                        (category,20000000, 1000000000, pageable);
+                default -> productReponsitory.findByCategoryOrderByPriceDesc(category, pageable);
+            };
+        }
+
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        for (Product products : productsPage) {
+            ProductDTO productDTO = productMapper.toProductDTO(products);
+            productDTO.setRate(rateUtilsHelper.getRate(products));
+            productDTOList.add(productDTO);
+        }
+        pagenationDTO.setTotalPages(productsPage.getTotalPages());
+        pagenationDTO.setObjectList(productDTOList);
+
+        return pagenationDTO;
+    }
+
+    @Override
+    public PagenationDTO getByBrand(int brand, int page, int filterSort, int filterPrice) {
+        Brand brandId = new Brand();
+        brandId.setId(brand);
+        Pageable pageable = PageRequest.of(page - 1, 12);
+        PagenationDTO pagenationDTO = new PagenationDTO();
+        Page<Product> productsPage = null;
+
+        if (filterSort == 0){
+            productsPage = switch (filterPrice) {
+                case 1 -> productReponsitory.findByBrandAndPriceBetween
+                        (brand, 0, 5000000, pageable);
+                case 2 -> productReponsitory.findByBrandAndPriceBetween
+                        (brand,5000000, 10000000, pageable);
+                case 3 -> productReponsitory.findByBrandAndPriceBetween
+                        (brand,10000000, 20000000, pageable);
+                case 4 -> productReponsitory.findByBrandAndPriceBetween
+                        (brand,20000000, 1000000000, pageable);
+                default -> productReponsitory.findAllByBrand(brandId, pageable);
+            };
+        } else if (filterSort == 1) {
+            productsPage = switch (filterPrice) {
+                case 1 -> productReponsitory.findByBrandAndPriceBetweenOrderByPriceAsc
+                        (brand, 0, 5000000, pageable);
+                case 2 -> productReponsitory.findByBrandAndPriceBetweenOrderByPriceAsc
+                        (brand, 5000000, 10000000, pageable);
+                case 3 -> productReponsitory.findByBrandAndPriceBetweenOrderByPriceAsc
+                        (brand, 10000000, 20000000, pageable);
+                case 4 -> productReponsitory.findByBrandAndPriceBetweenOrderByPriceAsc
+                        (brand, 20000000, 1000000000, pageable);
+                default -> productReponsitory.findByBrandOrderByPriceAsc(brand, pageable);
+            };
+        } else {
+            productsPage = switch (filterPrice) {
+                case 1 -> productReponsitory.findByBrandAndPriceBetweenOrderByPriceDesc
+                        (brand,0, 5000000, pageable);
+                case 2 -> productReponsitory.findByBrandAndPriceBetweenOrderByPriceDesc
+                        (brand, 5000000, 10000000, pageable);
+                case 3 -> productReponsitory.findByBrandAndPriceBetweenOrderByPriceDesc
+                        (brand,10000000, 20000000, pageable);
+                case 4 -> productReponsitory.findByBrandAndPriceBetweenOrderByPriceDesc
+                        (brand,20000000, 1000000000, pageable);
+                default -> productReponsitory.findByBrandOrderByPriceDesc(brand, pageable);
+            };
+        }
+
+        List<ProductDTO> productDTOList = new ArrayList<>();
+        for (Product products : productsPage) {
+            ProductDTO productDTO = productMapper.toProductDTO(products);
+            productDTO.setRate(rateUtilsHelper.getRate(products));
+            productDTOList.add(productDTO);
+        }
+        pagenationDTO.setTotalPages(productsPage.getTotalPages());
+        pagenationDTO.setObjectList(productDTOList);
+
+        return pagenationDTO;
     }
 }

@@ -5,12 +5,14 @@ import java.util.List;
 public class ProductDTO {
     private String id;
     private String name;
-    private List<String> img;
+    private List<ImgProductDTO> img;
     private String brand;
     private String category;
     private int price;
     private int quantity;
     private String description;
+    private Double rate;
+    private List<SizeDTO> sizeDTOList;
 
     public String getId() {
         return id;
@@ -28,11 +30,11 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public List<String> getImg() {
+    public List<ImgProductDTO> getImg() {
         return img;
     }
 
-    public void setImg(List<String> img) {
+    public void setImg(List<ImgProductDTO> img) {
         this.img = img;
     }
 
@@ -74,5 +76,21 @@ public class ProductDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Double getRate() {
+        return rate;
+    }
+
+    public void setRate(Double rate) {
+        this.rate = rate;
+    }
+
+    public List<SizeDTO> getSizeDTOList() {
+        return sizeDTOList;
+    }
+
+    public void setSizeDTOList(List<SizeDTO> sizeDTOList) {
+        this.sizeDTOList = sizeDTOList;
     }
 }

@@ -33,6 +33,7 @@ public enum ErrorCode {
     CATEGORY_UPDATE_ERROR(6663, "Sửa danh mục thất bại"),
     CATEGORY_DELETE_ERROR(6664, "Xóa danh mục thất bại"),
     CATEGORY_NOT_FOUND(6665, "Danh mục không tồn tại"),
+    STORE_NOT_FOUND(6667, "Thông tin cửa hàng không tồn tại"),
     ;
     private int code;
     private String message;

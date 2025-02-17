@@ -1,5 +1,6 @@
 package com.example.betmdtnhom3.controller;
 
+import com.example.betmdtnhom3.dto.request.ApplyVoucherRequest;
 import com.example.betmdtnhom3.dto.request.CreateVoucherRequest;
 import com.example.betmdtnhom3.dto.request.UpdateVoucherRequest;
 import com.example.betmdtnhom3.payload.ApiResponse;
@@ -51,4 +52,10 @@ public class VoucherController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+    @PostMapping("/apply")
+    public ResponseEntity<?> createVoucher(@RequestBody ApplyVoucherRequest applyVoucherRequest) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(voucherService.applyVoucher(applyVoucherRequest));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 }

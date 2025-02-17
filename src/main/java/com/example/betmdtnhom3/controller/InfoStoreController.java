@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/infoStore")
+@RequestMapping("/api/store")
 public class InfoStoreController {
 
     @Autowired
@@ -18,7 +18,6 @@ public class InfoStoreController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@ModelAttribute CreateInfoStoreRequest createInfoStoreRequest) {
-
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(infoStoreService.create(createInfoStoreRequest));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);

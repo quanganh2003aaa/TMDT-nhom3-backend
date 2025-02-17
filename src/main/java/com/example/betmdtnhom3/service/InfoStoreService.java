@@ -27,10 +27,10 @@ public class InfoStoreService implements InfoStoreServicelmpl {
     UserReponsitory userReponsitory;
 
     @Override
-    public boolean create(@NotNull CreateInfoStoreRequest createInfoStoreRequest) {
+    public boolean create(CreateInfoStoreRequest createInfoStoreRequest) {
         boolean isSuccess = false;
 
-        User user = userReponsitory.findById(createInfoStoreRequest.getUserId()).orElseThrow(
+        User user = userReponsitory.findById(createInfoStoreRequest.getUser()).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
         InfoStore infoStore = new InfoStore();
@@ -48,10 +48,10 @@ public class InfoStoreService implements InfoStoreServicelmpl {
     }
 
     @Override
-    public boolean update(int id, @NotNull UpdateInfoStoreRequest updateInfoStoreRequest) {
+    public boolean update(int id, UpdateInfoStoreRequest updateInfoStoreRequest) {
         boolean isSuccess = false;
         InfoStore infoStore = infoStoreReponsitory.findById(id).orElseThrow(()
-                -> new AppException(ErrorCode.FILE_UPLOAD_ERROR));
+                -> new AppException(ErrorCode.STORE_NOT_FOUND));
 
         User user = new User();
         user.setId(updateInfoStoreRequest.getUser());

@@ -3,6 +3,7 @@ package com.example.betmdtnhom3.responsitory;
 import com.example.betmdtnhom3.entity.Brand;
 import com.example.betmdtnhom3.entity.Category;
 import com.example.betmdtnhom3.entity.Product;
+import com.example.betmdtnhom3.entity.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -146,4 +147,6 @@ public interface ProductReponsitory extends JpaRepository<Product, String> {
 
     Page<Product> findAllByCategory(Category category, Pageable pageable);
     Page<Product> findAllByBrand(Brand brand, Pageable pageable);
+    @Query("SELECT p FROM products p JOIN sizes s ON p.id = s.product.id WHERE p.id = :id AND s.size = :size")
+    Product findByIdAndSize(@Param("id") String id, @Param("size") String size);
 }

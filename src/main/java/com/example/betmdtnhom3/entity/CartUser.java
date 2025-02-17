@@ -10,7 +10,7 @@ public class CartUser {
     @Column(name = "quantity")
     private int quantity;
     @Column(name = "size")
-    private int size;
+    private String size;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -36,11 +36,11 @@ public class CartUser {
         this.quantity = quantity;
     }
 
-    public int getSize() {
+    public String getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(String size) {
         this.size = size;
     }
 

@@ -9,7 +9,8 @@ public class ImgProduct {
     private int id;
     @Column(name = "img")
     private String img;
-
+    @Column(name = "index_img")
+    private int indexImg;
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
@@ -36,5 +37,13 @@ public class ImgProduct {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public int getIndexImg() {
+        return indexImg;
+    }
+
+    public void setIndexImg(int indexImg) {
+        this.indexImg = indexImg;
     }
 }

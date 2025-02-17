@@ -66,6 +66,7 @@ public class ProductService implements ProductServiceImpl {
 
             List<ImgProduct> imgProducts = new ArrayList<>();
 
+            int indexImg = 0;
             for (MultipartFile file : files) {
                 boolean isSaved = fileService.saveFile(file);
                 if (!isSaved) {
@@ -75,6 +76,12 @@ public class ProductService implements ProductServiceImpl {
                 ImgProduct imgProduct = new ImgProduct();
                 imgProduct.setProduct(product);
                 imgProduct.setImg(file.getOriginalFilename());
+                if (indexImg == 0) {
+                    imgProduct.setIndexImg(0);
+                    indexImg++;
+                } else {
+                    imgProduct.setIndexImg(1);
+                }
                 imgProducts.add(imgProduct);
             }
 
@@ -172,6 +179,7 @@ public class ProductService implements ProductServiceImpl {
             for (ImgProduct img:imgProductList) {
                 ImgProductDTO imgProductDTO = new ImgProductDTO();
                 imgProductDTO.setImg(img.getImg());
+                imgProductDTO.setIndex(img.getIndexImg());
                 imgProductDTOS.add(imgProductDTO);
             }
             productDTO.setImg(imgProductDTOS);

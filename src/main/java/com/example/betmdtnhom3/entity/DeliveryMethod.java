@@ -13,6 +13,8 @@ public class DeliveryMethod {
     private String name;
     @Column(name = "price")
     private int price;
+    @Column(name = "info")
+    private String info;
     @OneToMany(mappedBy = "deliveryMethod")
     private List<Order> orders;
 
@@ -38,6 +40,14 @@ public class DeliveryMethod {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public List<Order> getOrders() {

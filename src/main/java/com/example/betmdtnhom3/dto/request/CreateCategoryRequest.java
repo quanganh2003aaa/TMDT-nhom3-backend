@@ -9,7 +9,7 @@ public class CreateCategoryRequest {
     private String name;
     private List<Product> products;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 

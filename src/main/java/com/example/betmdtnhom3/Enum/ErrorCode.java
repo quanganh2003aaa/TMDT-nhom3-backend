@@ -32,6 +32,10 @@ public enum ErrorCode {
     CATEGORY_UPDATE_ERROR(6663, "Sửa danh mục thất bại"),
     CATEGORY_DELETE_ERROR(6664, "Xóa danh mục thất bại"),
     CATEGORY_NOT_FOUND(6665, "Danh mục không tồn tại"),
+    BLOG_CREATE_ERROR(6666, "Tạo bài viết thất bại"),
+    BLOG_UPDATE_ERROR(6667, "Sửa bài viết thất bại"),
+    BLOG_NOT_FOUND(6668, "Bài viết không tồn tại"),
+    BLOG_DELETE_ERROR(6669, "Xóa bài viết thất bại"),
     ;
     private int code;
     private String message;

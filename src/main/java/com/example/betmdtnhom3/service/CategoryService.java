@@ -25,7 +25,7 @@ public class CategoryService  implements CategoryServiceImpl {
     public Boolean createCategory(CreateCategoryRequest createCategoryRequest) {
         boolean isSuccess = false;
 
-        if (categoryReponsitory.existsById(createCategoryRequest.getId())) {
+        if (categoryReponsitory.existsById(String.valueOf(createCategoryRequest.getId()))) {
             throw new AppException(ErrorCode.CATEGORY_EXITED);
         }
 

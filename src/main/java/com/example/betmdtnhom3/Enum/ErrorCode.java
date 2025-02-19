@@ -35,6 +35,7 @@ public enum ErrorCode {
     CATEGORY_NOT_FOUND(6665, "Danh mục không tồn tại"),
     STORE_NOT_FOUND(6667, "Thông tin cửa hàng không tồn tại"),
     METHOD_DELIVERY_NOT_FOUND(6668, "Phương thức giao hàng không tồn tại"),
+    ORDER_NOT_FOUND(6669, "Đơn hàng không tồn tại"),
     ;
     private int code;
     private String message;

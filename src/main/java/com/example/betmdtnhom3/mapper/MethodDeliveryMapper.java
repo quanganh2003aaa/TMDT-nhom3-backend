@@ -10,3 +10,4 @@ public interface MethodDeliveryMapper {
     MethodDeliveryDTO toMethodDeliveryDTO (DeliveryMethod deliveryMethod);
     DeliveryMethod toCreateMethodDelivery(CreateMethodDeliveryRequest createMethodDeliveryRequest);
 }
+

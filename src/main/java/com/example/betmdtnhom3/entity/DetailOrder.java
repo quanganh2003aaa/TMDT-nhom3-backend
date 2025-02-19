@@ -10,7 +10,7 @@ public class DetailOrder {
     @Column(name = "quantity")
     private int quantity;
     @Column(name = "size")
-    private int size;
+    private String size;
     @Column(name = "id_product_history")
     private String idProductHistory;
 
@@ -38,11 +38,11 @@ public class DetailOrder {
         this.quantity = quantity;
     }
 
-    public int getSize() {
+    public String getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(String size) {
         this.size = size;
     }
 

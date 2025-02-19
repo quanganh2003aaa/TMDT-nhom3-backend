@@ -12,6 +12,7 @@ import com.example.betmdtnhom3.exception.AppException;
 import com.example.betmdtnhom3.mapper.VoucherMapper;
 import com.example.betmdtnhom3.responsitory.VoucherReponsitory;
 import com.example.betmdtnhom3.entity.Voucher;
+import com.example.betmdtnhom3.utils.VoucherUtilsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,8 @@ public class VoucherService {
     private VoucherReponsitory voucherRepository;
     @Autowired
     VoucherMapper voucherMapper;
+    @Autowired
+    VoucherUtilsHelper voucherUtilsHelper;
 
     public List<VoucherDTO> getAllVouchers() {
         List<VoucherDTO> voucherDTOList = new ArrayList<>();
@@ -93,36 +96,10 @@ public class VoucherService {
     }
 
     public ApplyVoucherDTO applyVoucher(ApplyVoucherRequest applyVoucherRequest) {
-        String id = applyVoucherRequest.getIdVoucher();
-        int totalPrice = applyVoucherRequest.getTotalPrice();
-
-        Voucher voucher = voucherRepository.findById(id).orElse(null);
-        if (voucher == null) {
-            return new ApplyVoucherDTO("Voucher không tồn tại", 0);
-        }
-
-        // Kiểm tra giá trị đơn hàng có đủ để sử dụng voucher không
-        if (totalPrice < voucher.getMinOrderAmount()) {
-            int neededAmount = voucher.getMinOrderAmount() - totalPrice;
-            return new ApplyVoucherDTO("Bạn cần mua thêm " + neededAmount + " đ để sử dụng voucher", 0);
-        }
-
-        // Kiểm tra thời gian hiệu lực
-        LocalDateTime now = LocalDateTime.now();
-        if (now.isBefore(voucher.getStartDate()) || (voucher.getEndDate() != null && now.isAfter(voucher.getEndDate()))) {
-            return new ApplyVoucherDTO("Voucher đã hết hạn", 0);
-        }
-
-        // Kiểm tra số lần sử dụng còn lại
-        if (voucher.getUsedCount() >= voucher.getMaxUsage()) {
-            return new ApplyVoucherDTO("Voucher đã được sử dụng hết", 0);
-        }
-
-        // Nếu đủ điều kiện, cập nhật số lần sử dụng
-        voucher.setUsedCount(voucher.getUsedCount() + 1);
-        voucherRepository.save(voucher);
-
-        return new ApplyVoucherDTO("Áp dụng voucher thành công!", voucher.getDiscountValue());
+        Voucher voucher = voucherRepository.findById(applyVoucherRequest.getIdVoucher()).orElseThrow(
+                () -> new AppException(ErrorCode.VOUCHER_NOT_FOUND)
+        );
+        return voucherUtilsHelper.applyVoucher(voucher, applyVoucherRequest.getTotalPrice());
     }
 
 }

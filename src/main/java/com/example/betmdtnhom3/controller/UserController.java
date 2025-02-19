@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+//Xu ly API request tu user, goi userserviceIpml thuc hien dky dang nhap
 @RestController
 @RequestMapping("api/user")
 public class UserController {

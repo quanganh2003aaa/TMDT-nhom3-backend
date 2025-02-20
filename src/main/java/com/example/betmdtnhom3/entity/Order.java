@@ -12,16 +12,12 @@ public class Order {
     private int id;
     @Column(name = "date", nullable = false)
     private LocalDateTime date;
-
     @Column(name = "total_price", nullable = false)
     private int totalPrice;
-
     @Column(name = "tel", nullable = false)
     private String tel;
-
     @Column(name = "address",nullable = false)
     private String address;
-
     @Column(name = "note")
     private String note;
     @Column(name = "discount_amount")

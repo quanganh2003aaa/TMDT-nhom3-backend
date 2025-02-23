@@ -14,11 +14,11 @@ public class Blog {
     private String title;
     @Column(name = "content")
     private String content;
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id", referencedColumnName = "id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "blog")

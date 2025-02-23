@@ -18,7 +18,6 @@ public class RateProduct {
     @ManyToOne
     @JoinColumn(name = "user")
     private User user;
-
     @ManyToOne
     @JoinColumn(name = "product")
     private Product product;

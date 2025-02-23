@@ -26,7 +26,7 @@ public class BlogService implements BlogServiceImpl {
     UserReponsitory userReponsitory;
    @Override
    public Boolean createBlog(CreateBlogRequest request) {
-       User user = userReponsitory.findById(request.getAuthorId()) // Không cần convert
+       User user = userReponsitory.findById(request.getAuthorId())
                .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại!"));
 
        Blog blog = blogMapper.toBlog(request);

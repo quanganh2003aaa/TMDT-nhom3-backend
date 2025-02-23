@@ -6,7 +6,7 @@ public class BlogDTO {
     private int id;
     private String title;
     private String content;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     private String authorName;
 
@@ -34,12 +34,12 @@ public class BlogDTO {
         this.content = content;
     }
 
-    public LocalDateTime getCreateAt() {
-        return createAt;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getAuthorName() {

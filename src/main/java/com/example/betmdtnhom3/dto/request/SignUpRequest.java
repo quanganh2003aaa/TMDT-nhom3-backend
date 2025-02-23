@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-
+//Du lieu dang ky tu user
 public class SignUpRequest {
     @Size(min = 1, max = 45, message = "INVALID_NAME_USER")
     private String name;

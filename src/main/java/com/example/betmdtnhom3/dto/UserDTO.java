@@ -1,5 +1,5 @@
 package com.example.betmdtnhom3.dto;
-
+//Du lieu tra ve cho user
 public class UserDTO {
     private String id;
     private String name;

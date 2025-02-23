@@ -7,4 +7,5 @@ import com.example.betmdtnhom3.dto.request.SignUpRequest;
 public interface UserServiceImpl {
     Boolean createUser(SignUpRequest signUpRequest);
     UserDTO login(AuthenticationRequest authenticationRequest);
+
 }

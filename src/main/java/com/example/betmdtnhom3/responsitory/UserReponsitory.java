@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface UserReponsitory extends JpaRepository<User, String> {
     Optional<User> findByTel(String tel);
+    Optional<User> findById(String id);
 }

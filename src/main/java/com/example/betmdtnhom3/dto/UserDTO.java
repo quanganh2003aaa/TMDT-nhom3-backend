@@ -3,10 +3,12 @@ package com.example.betmdtnhom3.dto;
 public class UserDTO {
     private String id;
     private String name;
-    private String password;
     private String tel;
     private String role;
     private String gmail;
+    private String district;
+    private String city;
+    private String ward;
 
     public String getId() {
         return id;
@@ -22,14 +24,6 @@ public class UserDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getTel() {
@@ -54,5 +48,29 @@ public class UserDTO {
 
     public void setGmail(String gmail) {
         this.gmail = gmail;
+    }
+
+    public String getCity(){
+        return  city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDistrict(){
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getWard(){
+        return ward;
+    }
+
+    public void setWard(String ward) {
+        this.ward = ward;
     }
 }

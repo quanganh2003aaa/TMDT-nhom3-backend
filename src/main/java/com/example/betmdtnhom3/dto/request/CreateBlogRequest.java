@@ -12,7 +12,6 @@ public class CreateBlogRequest {
     @NotNull(message = "Nội dung không được để trống")
     @Size(min = 20, message = "Nội dung phải có ít nhất 20 ký tự")
     private String content;
-    private LocalDateTime createAt = LocalDateTime.now();
     private String authorId;
 
     public String getTitle() {
@@ -29,14 +28,6 @@ public class CreateBlogRequest {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public LocalDateTime getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(LocalDateTime createAt) {
-        this.createAt = createAt;
     }
 
     public String getAuthorId() {

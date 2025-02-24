@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/rate")
+@RequestMapping("/api/rate")
 public class RateProductController {
     @Autowired
     RateProductServiceImpl rateProductService;

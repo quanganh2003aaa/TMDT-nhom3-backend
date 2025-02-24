@@ -87,6 +87,10 @@ public class UserService implements UserServiceImpl {
     public UserDTO updateUser(String id, UpdateUserRequest request){
         User user = userReponsitory.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
+        if (user.getRole() == Role.ADMIN) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
         user.setName(request.getName());
         user.setGmail(request.getGmail());
         user.setTel(request.getTel());
@@ -107,8 +111,37 @@ public class UserService implements UserServiceImpl {
     }
 
     @Override
+    public UserDTO updateAdmin(String id, UpdateUserRequest request){
+        User user = userReponsitory.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if (user.getRole() != Role.ADMIN) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
+        user.setName(request.getName());
+        user.setGmail(request.getGmail());
+        user.setTel(request.getTel());
+        InfoUser infoUser = infoUserReponsitory.findByUser(user).orElse(new InfoUser());
+
+        if (infoUser.getId() == null){
+            infoUser.setUser(user);
+        }
+
+        infoUser.setCity(request.getCity());
+        infoUser.setDistrict(request.getDistrict());
+        infoUser.setWard(request.getWard());
+
+        infoUserReponsitory.save(infoUser);
+        userReponsitory.save(user);
+        return userMapper.toUserDTO(user);
+    }
+
+
+    @Override
     public boolean deleteUser(String id){
         User user = userReponsitory.findById(id).orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
+        Optional<InfoUser> infoUser = infoUserReponsitory.findByUser(user);
+        infoUser.ifPresent(infoUserReponsitory::delete);
         userReponsitory.delete(user);
         return true;
     }

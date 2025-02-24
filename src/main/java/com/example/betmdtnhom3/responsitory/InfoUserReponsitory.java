@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface InfoUserReponsitory extends JpaRepository<InfoUser, String> {
     Optional<InfoUser> findByUser(User user);
+    void deleteByUser(User user);
 }

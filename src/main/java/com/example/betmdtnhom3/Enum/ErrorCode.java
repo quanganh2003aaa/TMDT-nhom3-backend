@@ -42,6 +42,7 @@ public enum ErrorCode {
     RATE_NOT_FOUND(6673, "Đánh giá không tồn tại"),
     UPDATE_RATE_ERROR(6674, "Lỗi sửa đánh giá"),
     DELETE_RATE_ERROR(6675, "Lỗi xóa đánh giá"),
+    UNAUTHORIZED(6676, "Lỗi xác thực"),
     ;
     private int code;
     private String message;

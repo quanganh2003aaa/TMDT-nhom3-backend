@@ -50,6 +50,12 @@ public class UserController {
         return ResponseEntity.ok(updateUser);
     }
 
+    @PutMapping("/update-admin/{id}")
+    public ResponseEntity<UserDTO> updateAdmin(@PathVariable String id, @RequestBody UpdateUserRequest request){
+        UserDTO updatedAdmin = userService.updateAdmin(id, request);
+        return ResponseEntity.ok(updatedAdmin);
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable String id){
         return userService.deleteUser(id) ? ResponseEntity.ok("Xoá thành công") : ResponseEntity.badRequest().body("Xóa thất bại");

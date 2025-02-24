@@ -1,10 +1,12 @@
 package com.example.betmdtnhom3.service;
 
+import com.example.betmdtnhom3.Enum.ErrorCode;
 import com.example.betmdtnhom3.dto.BlogDTO;
 import com.example.betmdtnhom3.dto.request.CreateBlogRequest;
 import com.example.betmdtnhom3.dto.request.UpdateBlogRequest;
 import com.example.betmdtnhom3.entity.Blog;
 import com.example.betmdtnhom3.entity.User;
+import com.example.betmdtnhom3.exception.AppException;
 import com.example.betmdtnhom3.mapper.BlogMapper;
 import com.example.betmdtnhom3.responsitory.BlogReponsitory;
 import com.example.betmdtnhom3.responsitory.UserReponsitory;
@@ -26,40 +28,54 @@ public class BlogService implements BlogServiceImpl {
     UserReponsitory userReponsitory;
    @Override
    public Boolean createBlog(CreateBlogRequest request) {
+       boolean isSuccess = false;
        User user = userReponsitory.findById(request.getAuthorId())
-               .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại!"));
+               .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
        Blog blog = blogMapper.toBlog(request);
        blog.setUser(user);
-       if (blog.getCreatedAt() == null) {
-           blog.setCreatedAt(LocalDateTime.now());
-       }
+       blog.setCreatedAt(LocalDateTime.now());
+        try {
+            blogReponsitory.save(blog);
+            isSuccess = true;
+        } catch (Exception e){
+            throw new AppException(ErrorCode.CREATE_BLOG_ERROR);
+        }
 
-       blogReponsitory.save(blog);
-       return true;
+       return isSuccess;
    }
     @Override
     public Boolean updateBlog(int blogId, UpdateBlogRequest request) {
+        boolean isSuccess = false;
         Blog blog = blogReponsitory.findById(blogId)
-                .orElseThrow(() -> new RuntimeException("Bài viết không tồn tại!"));
-
+                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
         blog.setTitle(request.getTitle());
         blog.setContent(request.getContent());
-        blogReponsitory.save(blog);
-        return true;
+        try {
+            blogReponsitory.save(blog);
+            isSuccess = true;
+        } catch (Exception e){
+            throw new AppException(ErrorCode.UPDATE_BLOG_ERROR);
+        }
+        return isSuccess;
     }
 
     @Override
     public Boolean deleteBlog(int id) {
+        boolean isSuccess = false;
         Blog blog = blogReponsitory.findById(id)
-                .orElseThrow(() -> new RuntimeException("Bài viết không tồn tại!"));
-
-        blogReponsitory.delete(blog);
-        return true;
+                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
+        try {
+            blogReponsitory.delete(blog);
+            isSuccess = true;
+        } catch (Exception e){
+            throw new AppException(ErrorCode.UPDATE_BLOG_ERROR);
+        }
+        return isSuccess;
     }
 
     @Override
-    public List<BlogDTO> getAllBlogs(String query, int select) {
+    public List<BlogDTO> getAllBlogs() {
         List<Blog> blogs = blogReponsitory.findAll();
         return blogs.stream().map(blogMapper::toblogDTO).collect(Collectors.toList());
     }

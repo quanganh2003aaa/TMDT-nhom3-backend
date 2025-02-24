@@ -9,7 +9,6 @@ import java.util.List;
 public interface BlogServiceImpl {
     Boolean createBlog(CreateBlogRequest request);
     Boolean updateBlog(int blogId, UpdateBlogRequest request);
-
     Boolean deleteBlog(int id);
-    List<BlogDTO> getAllBlogs(String query, int select);
+    List<BlogDTO> getAllBlogs();
 }

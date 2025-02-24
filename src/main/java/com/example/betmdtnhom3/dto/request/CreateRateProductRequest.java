@@ -14,7 +14,7 @@ public class CreateRateProductRequest {
     @NotEmpty
     private String user;
     @NotEmpty
-    private String idProduct;
+    private String idProduct ;
 
     public int getRate(){
         return rate;

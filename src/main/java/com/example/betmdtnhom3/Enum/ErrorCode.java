@@ -39,6 +39,10 @@ public enum ErrorCode {
     CREATE_BLOG_ERROR(6670, "Tạo tin tức lỗi"),
     UPDATE_BLOG_ERROR(6671, "Sửa tin tức lỗi"),
     BLOG_NOT_FOUND(6672, "Bài viết không tồn tại"),
+    RATE_NOT_FOUND(6673, "Đánh giá không tồn tại"),
+    UPDATE_RATE_ERROR(6674, "Lỗi sửa đánh giá"),
+    DELETE_RATE_ERROR(6675, "Lỗi xóa đánh giá"),
+    UNAUTHORIZED(6676, "Lỗi xác thực"),
     ;
     private int code;
     private String message;

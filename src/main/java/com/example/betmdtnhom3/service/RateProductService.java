@@ -3,6 +3,7 @@ package com.example.betmdtnhom3.service;
 import com.example.betmdtnhom3.dto.RateProductDTO;
 import com.example.betmdtnhom3.dto.request.CreateRateProductRequest;
 import com.example.betmdtnhom3.dto.request.PagenationDTO;
+import com.example.betmdtnhom3.dto.request.UpdateRateRequest;
 import com.example.betmdtnhom3.entity.*;
 import com.example.betmdtnhom3.exception.AppException;
 import com.example.betmdtnhom3.Enum.ErrorCode;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +83,59 @@ public class RateProductService implements RateProductServiceImpl{
 
         List<RateProductDTO> rateProductDTOS = new ArrayList<>();
         for (RateProduct rateProduct: rateProductPage) {
+            RateProductDTO rateProductDTO = new RateProductDTO();
+            rateProductDTO.setRate(rateProduct.getRate());
+            rateProductDTO.setContent(rateProduct.getContent());
+            rateProductDTO.setCreatedDate(rateProduct.getCreatedDate());
+            rateProductDTO.setIdProduct(rateProduct.getProduct().getId());
+            rateProductDTO.setNameProduct(rateProduct.getProduct().getName());
+            rateProductDTO.setUser(rateProduct.getUser().getName());
+
+            rateProductDTOS.add(rateProductDTO);
+        }
+        pagenationDTO.setTotalPages(rateProductPage.getTotalPages());
+        pagenationDTO.setObjectList(rateProductDTOS);
+
+        return pagenationDTO;
+    }
+
+    @Override
+    public boolean update(int id, UpdateRateRequest updateRateRequest){
+        RateProduct rateProduct = rateProductReponsitory.findById(id).orElseThrow(() -> new AppException(ErrorCode.RATE_NOT_FOUND));
+
+        if(updateRateRequest.getContent() != null){
+            rateProduct.setContent(updateRateRequest.getContent());
+        }
+
+        try{
+            rateProductReponsitory.save(rateProduct);
+            return true;
+        } catch (Exception e){
+            throw new AppException(ErrorCode.UPDATE_RATE_ERROR);
+        }
+    }
+
+    @Override
+    public boolean delete(int id){
+        RateProduct rateProduct = rateProductReponsitory.findById(id).orElseThrow(() -> new AppException(ErrorCode.RATE_NOT_FOUND));
+
+        try{
+            rateProductReponsitory.delete(rateProduct);
+            return true;
+        } catch (Exception e){
+            throw new AppException(ErrorCode.DELETE_RATE_ERROR);
+        }
+    }
+
+    @Override
+    public PagenationDTO getAllRates(int page){
+        Pageable pageable = PageRequest.of(page - 1,  5, Sort.by(Sort.Direction.DESC, "createdDate"));
+        PagenationDTO pagenationDTO = new PagenationDTO();
+
+        Page<RateProduct> rateProductPage = rateProductReponsitory.findAll(pageable);
+
+        List<RateProductDTO> rateProductDTOS = new ArrayList<>();
+        for(RateProduct rateProduct : rateProductPage){
             RateProductDTO rateProductDTO = new RateProductDTO();
             rateProductDTO.setRate(rateProduct.getRate());
             rateProductDTO.setContent(rateProduct.getContent());

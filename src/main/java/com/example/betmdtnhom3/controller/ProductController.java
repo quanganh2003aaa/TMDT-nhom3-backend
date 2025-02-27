@@ -83,4 +83,11 @@ public class ProductController {
         apiResponse.setResult(productService.getProduct(page, filterSort, filterPrice, query));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<?> getById(@PathVariable String id){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(productService.getById(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 }

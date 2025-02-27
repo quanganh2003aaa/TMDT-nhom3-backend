@@ -24,7 +24,7 @@ public class VoucherController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/getById/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<?> getVoucherById(@PathVariable String id) {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(voucherService.getVoucherById(id));

@@ -11,4 +11,5 @@ public interface BlogServiceImpl {
     Boolean updateBlog(int blogId, UpdateBlogRequest request);
     Boolean deleteBlog(int id);
     List<BlogDTO> getAllBlogs();
+    BlogDTO getById(int id);
 }

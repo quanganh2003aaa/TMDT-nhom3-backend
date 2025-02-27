@@ -18,12 +18,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-//Xu ly logic
 @Service
 public class UserService implements UserServiceImpl {
     @Autowired
@@ -47,7 +45,7 @@ public class UserService implements UserServiceImpl {
         boolean isSuccess = false;
 
         Optional<User> usersExisted = userReponsitory.findByTel(signUpRequest.getTel());
-        if (!usersExisted.isPresent()){
+        if (usersExisted.isEmpty()){
             User user = new User();
             user.setName(signUpRequest.getName());
 
@@ -86,13 +84,7 @@ public class UserService implements UserServiceImpl {
     @Override
     public UserDTO updateUser(String id, UpdateUserRequest request){
         User user = userReponsitory.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
-        if (user.getRole() == Role.ADMIN) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
-        }
-
         user.setName(request.getName());
-        user.setGmail(request.getGmail());
         user.setTel(request.getTel());
 
         InfoUser infoUser = infoUserReponsitory.findByUser(user).orElse(new InfoUser());
@@ -114,12 +106,7 @@ public class UserService implements UserServiceImpl {
     public UserDTO updateAdmin(String id, UpdateUserRequest request){
         User user = userReponsitory.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        if (user.getRole() != Role.ADMIN) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
-        }
-
         user.setName(request.getName());
-        user.setGmail(request.getGmail());
         user.setTel(request.getTel());
         InfoUser infoUser = infoUserReponsitory.findByUser(user).orElse(new InfoUser());
 
@@ -139,9 +126,17 @@ public class UserService implements UserServiceImpl {
 
     @Override
     public boolean deleteUser(String id){
-        User user = userReponsitory.findById(id).orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
-        Optional<InfoUser> infoUser = infoUserReponsitory.findByUser(user);
-        infoUser.ifPresent(infoUserReponsitory::delete);
+        boolean isSuccess = false;
+        User user = userReponsitory.findById(id).orElseThrow(
+                ()->new AppException(ErrorCode.USER_NOT_FOUND)
+        );
+        try {
+            userReponsitory.delete(user);
+            isSuccess = true;
+        } catch (Exception e){
+            throw new AppException(ErrorCode.DELETE_USER_ERROR);
+        }
+
         userReponsitory.delete(user);
         return true;
     }

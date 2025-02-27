@@ -12,7 +12,7 @@ public class ProductDTO {
     private int quantity;
     private String description;
     private Double rate;
-    private List<SizeDTO> sizeDTOList;
+    private List<String> sizeList;
 
     public String getId() {
         return id;
@@ -86,11 +86,11 @@ public class ProductDTO {
         this.rate = rate;
     }
 
-    public List<SizeDTO> getSizeDTOList() {
-        return sizeDTOList;
+    public List<String> getSizeList() {
+        return sizeList;
     }
 
-    public void setSizeDTOList(List<SizeDTO> sizeDTOList) {
-        this.sizeDTOList = sizeDTOList;
+    public void setSizeList(List<String> sizeList) {
+        this.sizeList = sizeList;
     }
 }

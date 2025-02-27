@@ -7,7 +7,6 @@ import com.example.betmdtnhom3.dto.request.UpdateUserRequest;
 import com.example.betmdtnhom3.payload.ApiResponse;
 import com.example.betmdtnhom3.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
-import org.apache.catalina.UserDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//Xu ly API request tu user, goi userserviceIpml thuc hien dky dang nhap
 @RestController
 @RequestMapping("api/user")
 public class UserController {
@@ -29,7 +27,7 @@ public class UserController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/create-admin")
+    @PostMapping("/createAdmin")
     public ResponseEntity<?> createAdmin(@RequestBody @Valid SignUpRequest signUpRequest){
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(userService.createAdmin(signUpRequest));
@@ -50,7 +48,7 @@ public class UserController {
         return ResponseEntity.ok(updateUser);
     }
 
-    @PutMapping("/update-admin/{id}")
+    @PutMapping("/updateAdmin/{id}")
     public ResponseEntity<UserDTO> updateAdmin(@PathVariable String id, @RequestBody UpdateUserRequest request){
         UserDTO updatedAdmin = userService.updateAdmin(id, request);
         return ResponseEntity.ok(updatedAdmin);

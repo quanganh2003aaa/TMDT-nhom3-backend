@@ -160,15 +160,13 @@ public class ProductService implements ProductServiceImpl {
         List<Size> sizesList = sizeReponsitory.findAllByProduct(products);
 
         if (sizesList.isEmpty()){
-            productDTO.setSizeDTOList(null);
+            productDTO.setSizeList(null);
         } else{
-            List<SizeDTO> sizeDTOList = new ArrayList<>();
+            List<String> sizeDTOList = new ArrayList<>();
             for (Size size:sizesList) {
-                SizeDTO sizeDTO = new SizeDTO();
-                sizeDTO.setSize(size.getSize());
-                sizeDTOList.add(sizeDTO);
+                sizeDTOList.add(size.getSize());
             }
-            productDTO.setSizeDTOList(sizeDTOList);
+            productDTO.setSizeList(sizeDTOList);
         }
 
         List<ImgProduct> imgProductList = imgProductReponsitory.findAllByProduct(products);

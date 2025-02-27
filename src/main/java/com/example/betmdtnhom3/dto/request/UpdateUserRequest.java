@@ -1,6 +1,5 @@
 package com.example.betmdtnhom3.dto.request;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -12,10 +11,6 @@ public class UpdateUserRequest {
     @NotBlank(message = "INVALID_TEL_EMPTY")
     @Pattern(regexp = "^(0)[1-9]{1}[0-9]{8}", message = "INVALID_TEL_FORMAT")
     private String tel;
-    @NotBlank(message = "INVALID_NOT_EMPTY")
-    @Email(message = "INVALID_GMAIL")
-    @Size(max = 100, message = "INVALID_GMAIL_LENGTH")
-    private String gmail;
     @NotBlank(message = "INVALID_CITY_EMPTY")
     @Size(min = 2, max = 100, message = "INVALID_CITY_LENGTH")
     private String city;
@@ -40,14 +35,6 @@ public class UpdateUserRequest {
 
     public void setTel(String tel) {
         this.tel = tel;
-    }
-
-    public String getGmail(){
-        return gmail;
-    }
-
-    public void setGmail(String gmail) {
-        this.gmail = gmail;
     }
 
     public String getCity(){

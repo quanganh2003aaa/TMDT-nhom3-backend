@@ -39,4 +39,10 @@ public class BlogController {
         apiResponse.setResult(blogService.deleteBlog(id));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+    @GetMapping("/id/{id}")
+    public ResponseEntity<?> getById(@PathVariable int id) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(blogService.getById(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 }

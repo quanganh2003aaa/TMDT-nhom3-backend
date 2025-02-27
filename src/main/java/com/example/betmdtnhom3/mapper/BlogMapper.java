@@ -12,6 +12,6 @@ public interface BlogMapper {
     Blog toBlog(CreateBlogRequest request);
 
     @Mapping(source = "user.name", target = "authorName")
-    @Mapping(source = "createdAt", target = "createdAt") // Thêm ánh xạ này
+    @Mapping(source = "createdAt", target = "createdAt")
     BlogDTO toblogDTO(Blog blog);
 }

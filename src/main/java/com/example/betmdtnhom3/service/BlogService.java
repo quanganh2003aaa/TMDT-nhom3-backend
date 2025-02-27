@@ -79,4 +79,12 @@ public class BlogService implements BlogServiceImpl {
         List<Blog> blogs = blogReponsitory.findAll();
         return blogs.stream().map(blogMapper::toblogDTO).collect(Collectors.toList());
     }
+
+    @Override
+    public BlogDTO getById(int id) {
+       Blog blog = blogReponsitory.findById(id).orElseThrow(
+               ()->new AppException(ErrorCode.BLOG_NOT_FOUND));
+        return blogMapper.toblogDTO(blog);
+    }
+
 }

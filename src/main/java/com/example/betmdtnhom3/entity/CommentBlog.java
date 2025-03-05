@@ -15,11 +15,11 @@ public class CommentBlog {
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "user", referencedColumnName = "id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "blog")
+    @JoinColumn(name = "blog", referencedColumnName = "id", nullable = false)
     private Blog blog;
 
     public int getId() {

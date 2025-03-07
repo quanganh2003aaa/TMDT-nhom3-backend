@@ -1,20 +1,18 @@
 package com.example.betmdtnhom3.dto.request;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public class CreateRateProductRequest {
     @Max(value = 5, message = "NUMBER_RATE_ERROR")
     @Min(value = 1, message = "NUMBER_RATE_ERROR")
     private int rate;
-    @Size(max = 255, message = "CONTENT_RATE_ERROR")
+    @NotBlank(message = "CONTENT_RATE_EMPTY")
+    @Size(min = 5, max = 255, message = "CONTENT_RATE_LENGTH_ERROR")
     private String content;
-    @NotEmpty
+    @NotBlank(message = "USER_EMPTY")
     private String user;
-    @NotEmpty
-    private String idProduct;
+    @NotBlank(message = "ID_PRODUCT_EMPTY")
+    private String idProduct ;
 
     public int getRate(){
         return rate;

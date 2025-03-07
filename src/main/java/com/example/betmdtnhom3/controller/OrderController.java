@@ -28,4 +28,55 @@ public class OrderController {
         apiResponse.setResult(orderService.createOrder(createOrderRequest));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+    @PutMapping("/confirm/{id}")
+    public ResponseEntity<?> confirm(@PathVariable int id){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(orderService.confirmOrder(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/deliver/{id}")
+    public ResponseEntity<?> deliver(@PathVariable int id){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(orderService.deliverOrder(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/success/{id}")
+    public ResponseEntity<?> success(@PathVariable int id){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(orderService.successOrder(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<?> cancel(@PathVariable int id){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(orderService.cancelOrder(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> delete(@PathVariable int id){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(orderService.deleteOrder(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/getByUser/{id}")
+    public ResponseEntity<?> getOrderByUser(@PathVariable String id){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(orderService.getOrderByUser(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/getOrderSearch")
+    public ResponseEntity<?> getOrderById(@RequestParam(defaultValue = "1", required = false) int page,
+                                          @RequestParam(defaultValue = "", required = false) String query,
+                                          @RequestParam(defaultValue = "0", required = false) int select){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(orderService.getOrderSearch(page, query, select));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 }

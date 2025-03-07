@@ -1,19 +1,20 @@
 package com.example.betmdtnhom3.dto.request;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-//Du lieu dang ky tu user
+import jakarta.validation.constraints.*;
+
 public class SignUpRequest {
-    @Size(min = 1, max = 45, message = "INVALID_NAME_USER")
+    @NotBlank(message = "INVALID_NAME_EMPTY")
+    @Size(min = 2, max = 45, message = "INVALID_NAME_LENGTH")
     private String name;
-    @NotEmpty(message = "INVALID_NOT_EMPTY")
+    @NotBlank(message = "INVALID_PASSWORD_EMPTY")
+    @Size(min = 8, max = 50, message = "INVALID_PASSWORD_LENGTH")
     private String password;
-    @Pattern(regexp = "^(0)[1-9]{1}[0-9]{8}", message = "INVALID_TEL")
+    @NotBlank(message = "INVALID_TEL_EMPTY")
+    @Pattern(regexp = "^(0)[1-9]{1}[0-9]{8}$", message = "INVALID_TEL_FORMAT")
     private String tel;
-    @NotEmpty(message = "INVALID_NOT_EMPTY")
-    @Email(message = "INVALID_GMAIL")
+    @NotBlank(message = "INVALID_GMAIL_EMPTY")
+    @Email(message = "INVALID_GMAIL_FORMAT")
+    @Size(max = 100, message = "INVALID_GMAIL_LENGTH")
     private String gmail;
 
     public String getName() {

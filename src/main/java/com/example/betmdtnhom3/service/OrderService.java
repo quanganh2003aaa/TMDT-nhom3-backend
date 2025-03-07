@@ -16,14 +16,16 @@ import com.example.betmdtnhom3.responsitory.*;
 import com.example.betmdtnhom3.service.impl.OrderServiceImpl;
 import com.example.betmdtnhom3.utils.SizeUtilsHelper;
 import com.example.betmdtnhom3.utils.VoucherUtilsHelper;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,12 +75,39 @@ public class OrderService implements OrderServiceImpl {
 
     @Override
     public PagenationDTO getOrderSearch(int page, String query, int select) {
-        return null;
+        Pageable pageable = PageRequest.of(page - 1, 5, Sort.by(Sort.Direction.DESC, "date"));
+        PagenationDTO pagenationDTO = new PagenationDTO();
+        Page<Order> ordersPage;
+        if (select == 0){
+            ordersPage = orderReponsitory.findByPartialIdOrder(query, pageable);
+        } else {
+            ordersPage = orderReponsitory.findByPartialIdOrderAndStatusOrders(query, select, pageable);
+        }
+
+        List<OrderListDTO> orderDTOList = new ArrayList<>();
+        for (Order order: ordersPage) {
+            OrderListDTO orderListDTO = orderMapper.toOderList(order);
+            orderDTOList.add(orderListDTO);
+        }
+
+        pagenationDTO.setTotalPages(ordersPage.getTotalPages());
+        pagenationDTO.setObjectList(orderDTOList);
+
+        return pagenationDTO;
     }
 
     @Override
     public List<OrderListDTO> getOrderByUser(String idUser) {
-        return null;
+        User users = userReponsitory.findById(idUser).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
+        List<Order> ordersPage = orderReponsitory.findAllByUserOrderByDateDesc(users);
+
+        List<OrderListDTO> orderDTOList = new ArrayList<>();
+        for (Order order: ordersPage) {
+            OrderListDTO orderListDTO = orderMapper.toOderList(order);
+            orderDTOList.add(orderListDTO);
+        }
+
+        return orderDTOList;
     }
 
     @Override
@@ -95,120 +124,198 @@ public class OrderService implements OrderServiceImpl {
         orderDTO.setDetailOrderDTOList(detailOrderDTOList);
         return orderDTO;
     }
-    @Transactional
+    @Transactional(rollbackFor = {AppException.class, IOException.class, SQLException.class})
     @Override
     public Boolean createOrder(CreateOrderRequest createOrderRequest) {
-        boolean isSuccess = false;
-        Optional<User> users = userReponsitory.findById(createOrderRequest.getUser());
-
-        if (users.isPresent()){
-            Order orders = new Order();
-            int totalPrice = 0;
-
-            List<DetailOrder> detailOrdersList = new ArrayList<>();
-            for (DetailOrderRequest detailOrderRequest: createOrderRequest.getDetailOrderRequestList()) {
-                Optional<Product> products = productReponsitory.findById(detailOrderRequest.getId());
-                if (products.isPresent()){
-                    List<Size> sizes = sizeReponsitory.findAllByProduct(products.get());
-                    if (sizeUtilsHelper.isSizeAvailable(sizes, detailOrderRequest.getSize())){
-                        int priceProduct = detailOrderRequest.getQuantity() * products.get().getPrice();
-
-                        DetailOrder detailOrders = new DetailOrder();
-                        detailOrders.setOrder(orders);
-                        detailOrders.setQuantity(detailOrderRequest.getQuantity());
-                        detailOrders.setProduct(products.get());
-                        detailOrders.setIdProductHistory(detailOrderRequest.getId());
-                        detailOrders.setSize(detailOrderRequest.getSize());
-                        detailOrdersList.add(detailOrders);
-
-                        products.get().setQuantity(products.get().getQuantity() - detailOrderRequest.getQuantity());
-                        totalPrice+=priceProduct;
-                        try {
-                            productReponsitory.save(products.get());
-                        } catch (Exception e){
-                            throw new AppException(ErrorCode.ORDER_CREATE_ERROR);
-                        }
-                    } else{
-                        throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
-                    }
-                }else {
-                    throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
-                }
-            }
-
-            DeliveryMethod deliveryMethod = deliveryMethodReponsitory.findById(createOrderRequest.getDeliveryMethod()).orElseThrow(
-                    () -> new AppException(ErrorCode.METHOD_DELIVERY_NOT_FOUND)
-            );
-            totalPrice += deliveryMethod.getPrice();
-            orders.setDeliveryMethod(deliveryMethod);
-            orders.setDate(LocalDateTime.now());
-            orders.setTel(createOrderRequest.getTel());
-            orders.setAddress(createOrderRequest.getAddress());
-            orders.setNote(createOrderRequest.getNote());
-            orders.setUser(users.get());
-
-            StatusOrder statusOrders = new StatusOrder();
-            statusOrders.setId(1);
-            orders.setStatusOrder(statusOrders);
-
-            LocalDateTime now = LocalDateTime.now();
-            int month = now.getMonthValue();
-            int year = now.getYear();
-            Revenue revenues = revenueReponsitory.findRevenuesByMonthAndYear(month, year);
-            if (revenues==null){
-                Revenue newRevenue = new Revenue();
-                newRevenue.setRevenue(0);
-                newRevenue.setMonth(month);
-                newRevenue.setYear(year);
-                revenueReponsitory.save(newRevenue);
-                orders.setRevenue(newRevenue);
-            }else {
-                orders.setRevenue(revenues);
-            }
-            Optional<Voucher> voucher = voucherReponsitory.findById(createOrderRequest.getVoucherCode());
-            if (voucher.isPresent()){
-                orders.setDiscountAmount(voucher.get().getDiscountValue());
-                orders.setFinalAmount(totalPrice - voucher.get().getDiscountValue());
-                orders.setVoucher(voucher.get());
-            }
-
-            try {
-                orders.setTotalPrice(totalPrice);
-                orderReponsitory.save(orders);
-                detailOrderReponsitory.saveAll(detailOrdersList);
-                isSuccess = true;
-            } catch (Exception e){
-                throw new AppException(ErrorCode.ORDER_CREATE_ERROR);
-            }
-        }else {
+        Optional<User> user = userReponsitory.findById(createOrderRequest.getUser());
+        if (user.isEmpty()) {
             throw new AppException(ErrorCode.USER_NOT_FOUND);
         }
 
-        return isSuccess;
+        Order order = new Order();
+        int totalPrice = 0;
+        List<DetailOrder> detailOrdersList = new ArrayList<>();
+
+        for (DetailOrderRequest detailRequest : createOrderRequest.getDetailOrderRequestList()) {
+            Product product = productReponsitory.findById(detailRequest.getId())
+                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
+            List<Size> sizes = sizeReponsitory.findAllByProduct(product);
+            if (!sizeUtilsHelper.isSizeAvailable(sizes, detailRequest.getSize())) {
+                throw new AppException(ErrorCode.PRODUCT_NOT_FOUND);
+            }
+
+            int priceProduct = detailRequest.getQuantity() * product.getPrice();
+            DetailOrder detailOrder = new DetailOrder();
+            detailOrder.setOrder(order);
+            detailOrder.setQuantity(detailRequest.getQuantity());
+            detailOrder.setProduct(product);
+            detailOrder.setIdProductHistory(detailRequest.getId());
+            detailOrder.setSize(detailRequest.getSize());
+            detailOrdersList.add(detailOrder);
+
+            product.setQuantity(product.getQuantity() - detailRequest.getQuantity());
+            productReponsitory.save(product);
+            totalPrice += priceProduct;
+        }
+
+        DeliveryMethod deliveryMethod = deliveryMethodReponsitory.findById(createOrderRequest.getDeliveryMethod())
+                .orElseThrow(() -> new AppException(ErrorCode.METHOD_DELIVERY_NOT_FOUND));
+
+        totalPrice += deliveryMethod.getPrice();
+        order.setDeliveryMethod(deliveryMethod);
+        order.setDate(LocalDateTime.now());
+        order.setTel(createOrderRequest.getTel());
+        order.setAddress(createOrderRequest.getAddress());
+        order.setNote(createOrderRequest.getNote());
+        order.setUser(user.get());
+        StatusOrder statusOrder = new StatusOrder();
+        statusOrder.setId(1);
+        order.setStatusOrder(statusOrder);
+
+        Revenue revenue = revenueReponsitory.findRevenuesByMonthAndYear(LocalDateTime.now().getMonthValue(), LocalDateTime.now().getYear());
+        if (revenue == null) {
+            revenue = new Revenue();
+            revenue.setRevenue(0);
+            revenue.setMonth(LocalDateTime.now().getMonthValue());
+            revenue.setYear(LocalDateTime.now().getYear());
+            revenueReponsitory.save(revenue);
+        }
+        order.setRevenue(revenue);
+
+        if (createOrderRequest.getVoucherCode().isEmpty()){
+            order.setDiscountAmount(0);
+            order.setFinalAmount(totalPrice);
+        } else {
+            Voucher voucher = voucherReponsitory.findById(createOrderRequest.getVoucherCode())
+                    .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+            order.setDiscountAmount(voucher.getDiscountValue());
+            order.setFinalAmount(totalPrice - voucher.getDiscountValue());
+            order.setVoucher(voucher);
+        }
+
+        order.setTotalPrice(totalPrice);
+        orderReponsitory.save(order);
+        detailOrderReponsitory.saveAll(detailOrdersList);
+
+        return true;
     }
 
     @Override
     public Boolean confirmOrder(int id) {
-        return null;
+        boolean isSuccess = false;
+        Optional<Order> orders = orderReponsitory.findById(id);
+        try {
+            if (orders.isPresent() && orders.get().getStatusOrder().getId() == 1){
+                StatusOrder statusOrders = new StatusOrder();
+                statusOrders.setId(2);
+                orders.get().setStatusOrder(statusOrders);
+            } else {
+                throw new AppException(ErrorCode.ORDER_ERROR);
+            }
+            orderReponsitory.save(orders.get());
+            isSuccess = true;
+        }catch (Exception e){
+            throw new AppException(ErrorCode.ORDER_ERROR);
+        }
+        return isSuccess;
     }
 
     @Override
     public Boolean deliverOrder(int id) {
-        return null;
+        boolean isSuccess = false;
+        try {
+            Optional<Order> orders = orderReponsitory.findById(id);
+            if (orders.isPresent() && orders.get().getStatusOrder().getId() == 2){
+                StatusOrder statusOrders = new StatusOrder();
+                statusOrders.setId(3);
+                orders.get().setStatusOrder(statusOrders);
+            } else {
+                throw new AppException(ErrorCode.ORDER_ERROR);
+            }
+
+            orderReponsitory.save(orders.get());
+            isSuccess = true;
+        }catch (Exception e){
+            throw new AppException(ErrorCode.ORDER_ERROR);
+        }
+        return isSuccess;
     }
 
     @Override
     public Boolean cancelOrder(int id) {
-        return null;
+        boolean isSuccess = false;
+        try {
+            Optional<Order> orders = orderReponsitory.findById(id);
+            if (orders.isPresent() ){
+                if (orders.get().getStatusOrder().getId() == 2 || orders.get().getStatusOrder().getId() == 1){
+                    StatusOrder statusOrders = new StatusOrder();
+                    statusOrders.setId(5);
+                    orders.get().setStatusOrder(statusOrders);
+                }
+            } else {
+                throw new AppException(ErrorCode.ORDER_ERROR);
+            }
+            orderReponsitory.save(orders.get());
+            isSuccess = true;
+        }catch (Exception e){
+            throw new AppException(ErrorCode.ORDER_ERROR);
+        }
+        return isSuccess;
     }
 
+    @Transactional(rollbackFor = {AppException.class, IOException.class, SQLException.class})
     @Override
     public Boolean successOrder(int id) {
-        return null;
+        Optional<Order> optionalOrder = orderReponsitory.findById(id);
+
+        if (optionalOrder.isEmpty()) {
+            throw new AppException(ErrorCode.ORDER_ERROR);
+        }
+
+        Order order = optionalOrder.get();
+
+        if (order.getStatusOrder().getId() != 3) {
+            throw new AppException(ErrorCode.ORDER_ERROR);
+        }
+
+        StatusOrder statusOrder = new StatusOrder();
+        statusOrder.setId(4);
+        order.setStatusOrder(statusOrder);
+        orderReponsitory.save(order);
+
+        LocalDateTime now = LocalDateTime.now();
+        int month = now.getMonthValue();
+        int year = now.getYear();
+
+        Revenue revenue = revenueReponsitory.findRevenuesByMonthAndYear(month, year);
+
+        if (revenue == null) {
+            revenue = new Revenue();
+            revenue.setMonth(month);
+            revenue.setYear(year);
+            revenue.setRevenue(order.getTotalPrice());
+        } else {
+            revenue.setRevenue(revenue.getRevenue() + order.getTotalPrice());
+        }
+
+        revenueReponsitory.save(revenue);
+
+        return true;
     }
 
     @Override
     public Boolean deleteOrder(int id) {
-        return null;
+        boolean isSuccess = false;
+        Order orders = orderReponsitory.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+        );
+        try {
+            orderReponsitory.delete(orders);
+            isSuccess = true;
+        }catch (Exception e){
+            throw new AppException(ErrorCode.DELETE_ORDER_ERROR);
+        }
+        return isSuccess;
     }
 }

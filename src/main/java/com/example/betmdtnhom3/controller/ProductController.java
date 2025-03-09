@@ -40,7 +40,7 @@ public class ProductController {
     public ResponseEntity<?> update(@PathVariable String id,
                                     @RequestParam("files") List<MultipartFile> files,
                                     @ModelAttribute UpdateProductRequest updateProductRequest){
-
+        System.out.println(1);
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(productService.update(id, files, updateProductRequest));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
@@ -88,6 +88,13 @@ public class ProductController {
     public ResponseEntity<?> getById(@PathVariable String id){
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(productService.getById(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/getIndex")
+    public ResponseEntity<?> getIndex(){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(productService.getIndex());
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }

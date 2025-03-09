@@ -47,7 +47,6 @@ public class UserService implements UserServiceImpl {
         Optional<User> usersExisted = userReponsitory.findByTel(signUpRequest.getTel());
         if (usersExisted.isEmpty()){
             User user = new User();
-            user.setName(signUpRequest.getName());
 
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
             user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));

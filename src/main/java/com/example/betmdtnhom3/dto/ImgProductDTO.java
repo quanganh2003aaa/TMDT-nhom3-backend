@@ -2,7 +2,7 @@ package com.example.betmdtnhom3.dto;
 
 public class ImgProductDTO {
     private String img;
-    private int index;
+    private int indexImg;
 
     public String getImg() {
         return img;
@@ -12,11 +12,11 @@ public class ImgProductDTO {
         this.img = img;
     }
 
-    public int getIndex() {
-        return index;
+    public int getIndexImg() {
+        return indexImg;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setIndexImg(int indexImg) {
+        this.indexImg = indexImg;
     }
 }

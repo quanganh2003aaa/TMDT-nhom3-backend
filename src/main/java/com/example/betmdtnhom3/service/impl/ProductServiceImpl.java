@@ -1,6 +1,7 @@
 package com.example.betmdtnhom3.service.impl;
 
 import com.example.betmdtnhom3.dto.ProductDTO;
+import com.example.betmdtnhom3.dto.ProductListDTO;
 import com.example.betmdtnhom3.dto.request.CreateProductRequest;
 import com.example.betmdtnhom3.dto.request.PagenationDTO;
 import com.example.betmdtnhom3.dto.request.UpdateProductRequest;
@@ -13,9 +14,8 @@ public interface ProductServiceImpl {
     Boolean update(String idProduct,List<MultipartFile> file, UpdateProductRequest updateProductRequest);
     Boolean delete(String id);
     ProductDTO getById(String id);
-    List<ProductDTO> getAllAdmin(String query, int select) ;
-    List<ProductDTO> getAllUser(String query, int select) ;
-    List<ProductDTO> getIndex();
+    List<ProductListDTO> getAllAdmin(String query, int select) ;
+    List<ProductListDTO> getIndex();
     PagenationDTO getProduct(int page, int filterSort, int filterPrice, String query);
     PagenationDTO getByCategory(int category,int page, int filterSort, int filterPrice);
     PagenationDTO getByBrand(int brand, int page, int filterSort, int filterPrice);

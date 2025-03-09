@@ -13,3 +13,6 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
 fileUpload:
   rootPath: C:\Users\My Computer\OneDrive\Desktop\TMDT\Images\product
+
+jwt:
+  signerKey: "lemmYw3VPItk8KxJQVquC0TG2QSqm6jw0GhQbZ6vm/zXlOmNnzTgLCWS3Xutxvv4"

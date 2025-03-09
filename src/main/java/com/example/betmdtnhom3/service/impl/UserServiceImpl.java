@@ -7,7 +7,6 @@ import com.example.betmdtnhom3.dto.request.UpdateUserRequest;
 
 import java.util.List;
 
-//Dinh nghia cac phuong thuc ma service can lam
 public interface UserServiceImpl {
     Boolean createUser(SignUpRequest signUpRequest);
     UserDTO login(AuthenticationRequest authenticationRequest);

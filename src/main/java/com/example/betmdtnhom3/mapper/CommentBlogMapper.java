@@ -10,6 +10,6 @@ public interface CommentBlogMapper {
     @Mapping(source = "userId", target = "user.id")
     CommentBlog toCmtBlog(CreateCommentBlogRequest request);
     @Mapping(source = "user.name", target = "userName")
-    @Mapping(source = "createdAt", target = "createdAt")
+    @Mapping(source = "blog.id", target = "blogId")
     CommentBlogDTO toCmtBlogDTO(CommentBlog commentBlog);
 }

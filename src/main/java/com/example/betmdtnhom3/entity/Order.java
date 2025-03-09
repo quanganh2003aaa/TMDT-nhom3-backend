@@ -1,5 +1,7 @@
 package com.example.betmdtnhom3.entity;
 
+import com.example.betmdtnhom3.Enum.PaymentStatus;
+import com.example.betmdtnhom3.Enum.Role;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -24,6 +26,9 @@ public class Order {
     private int discountAmount;
     @Column(name = "final_amount")
     private int finalAmount;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "pay_status")
+    private PaymentStatus paymentStatus;
 
     @ManyToOne
     @JoinColumn(name = "user")
@@ -166,5 +171,13 @@ public class Order {
 
     public void setOrderRefunds(List<OrderRefund> orderRefunds) {
         this.orderRefunds = orderRefunds;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

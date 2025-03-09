@@ -1,5 +1,6 @@
 package com.example.betmdtnhom3.service;
 
+import com.example.betmdtnhom3.Enum.ErrorCode;
 import com.example.betmdtnhom3.dto.CommentBlogDTO;
 import com.example.betmdtnhom3.dto.request.CreateCommentBlogRequest;
 import com.example.betmdtnhom3.dto.request.UpdateCommentBlogRequest;
@@ -7,6 +8,7 @@ import com.example.betmdtnhom3.entity.Blog;
 import com.example.betmdtnhom3.entity.CommentBlog;
 import com.example.betmdtnhom3.entity.InfoUser;
 import com.example.betmdtnhom3.entity.User;
+import com.example.betmdtnhom3.exception.AppException;
 import com.example.betmdtnhom3.mapper.CommentBlogMapper;
 import com.example.betmdtnhom3.responsitory.BlogReponsitory;
 import com.example.betmdtnhom3.responsitory.CommentBlogRepository;
@@ -77,13 +79,18 @@ public class CommentBlogService implements CommentBlogServiceImpl {
     public List<CommentBlogDTO> getAllCommentBlog(String query, int select) {
         List<CommentBlog> comments = commentBlogRepository.findAll();
         return comments.stream()
-                .map(comment -> new CommentBlogDTO(
-                        comment.getId(),
-                        comment.getContent(),
-                        comment.getCreatedAt(),
-                        comment.getUser().getName(),
-                        comment.getId()
-                ))
+                .map(commentBlogMapper::toCmtBlogDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CommentBlogDTO> getByBlog(int blogId) {
+        Blog blog = blogReponsitory.findById(blogId).orElseThrow(
+                () -> new AppException(ErrorCode.BLOG_NOT_FOUND)
+        );
+        List<CommentBlog> comments = commentBlogRepository.findByBlog(blog);
+        return comments.stream()
+                .map(commentBlogMapper::toCmtBlogDTO)
                 .collect(Collectors.toList());
     }
 

@@ -25,9 +25,6 @@ public class OrderRefund {
     @JoinColumn(name = "revenue")
     private Revenue revenue;
 
-    @ManyToOne
-    @JoinColumn(name = "status")
-    private StatusOrder statusOrder;
 
     public int getId() {
         return id;
@@ -67,13 +64,5 @@ public class OrderRefund {
 
     public void setRevenue(Revenue revenue) {
         this.revenue = revenue;
-    }
-
-    public StatusOrder getStatusOrder() {
-        return statusOrder;
-    }
-
-    public void setStatusOrder(StatusOrder statusOrder) {
-        this.statusOrder = statusOrder;
     }
 }

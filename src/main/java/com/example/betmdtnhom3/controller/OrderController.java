@@ -3,11 +3,17 @@ package com.example.betmdtnhom3.controller;
 import com.example.betmdtnhom3.dto.request.CreateOrderRequest;
 import com.example.betmdtnhom3.payload.ApiResponse;
 import com.example.betmdtnhom3.service.impl.OrderServiceImpl;
+import com.example.betmdtnhom3.service.impl.PaymentServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
+
+import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequestMapping("/api/order")
@@ -77,6 +83,13 @@ public class OrderController {
                                           @RequestParam(defaultValue = "0", required = false) int select){
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(orderService.getOrderSearch(page, query, select));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/getById/{id}")
+    public ResponseEntity<?> getOrderById(@PathVariable int id){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(orderService.getById(id));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }

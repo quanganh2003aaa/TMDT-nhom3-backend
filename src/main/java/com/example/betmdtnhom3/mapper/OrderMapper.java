@@ -5,6 +5,7 @@ import com.example.betmdtnhom3.dto.OrderListDTO;
 import com.example.betmdtnhom3.entity.Order;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
@@ -15,8 +16,10 @@ public interface OrderMapper {
     @Mapping(source = "deliveryMethod.price", target = "shippingFee")
     @Mapping(source = "voucher.discountValue", target = "discountAmount")
     @Mapping(source = "details", target = "detailOrderDTOList")
+    @Mapping(source = "paymentStatus", target = "paymentStatus")
     OrderDTO toOrder(Order order);
 
     @Mapping(source = "statusOrder.name", target = "status")
     OrderListDTO toOderList(Order order);
+
 }

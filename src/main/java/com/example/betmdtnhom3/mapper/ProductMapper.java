@@ -1,9 +1,12 @@
 package com.example.betmdtnhom3.mapper;
 
+import com.example.betmdtnhom3.dto.ImgProductDTO;
 import com.example.betmdtnhom3.dto.ProductDTO;
+import com.example.betmdtnhom3.dto.ProductListDTO;
 import com.example.betmdtnhom3.dto.request.CreateProductRequest;
 import com.example.betmdtnhom3.entity.Brand;
 import com.example.betmdtnhom3.entity.Category;
+import com.example.betmdtnhom3.entity.ImgProduct;
 import com.example.betmdtnhom3.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,6 +22,10 @@ public interface ProductMapper {
     @Mapping(source = "brand", target = "brand", qualifiedByName = "IntToBrand")
     Product toProductCreate(CreateProductRequest createProductRequest);
 
+    ImgProductDTO toImgProductDTO(ImgProduct imgProduct);
+
+//    @Mapping(source = "indexImg", target = "indexImg")
+    ProductListDTO toProductListDTO(Product product);
     @Named("IntToCategory")
     default Category IntToCategory(Integer cate) {
         if (cate == null) {

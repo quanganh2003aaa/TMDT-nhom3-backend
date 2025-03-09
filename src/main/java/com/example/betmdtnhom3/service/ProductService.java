@@ -3,6 +3,7 @@ package com.example.betmdtnhom3.service;
 import com.example.betmdtnhom3.Enum.ErrorCode;
 import com.example.betmdtnhom3.dto.ImgProductDTO;
 import com.example.betmdtnhom3.dto.ProductDTO;
+import com.example.betmdtnhom3.dto.ProductListDTO;
 import com.example.betmdtnhom3.dto.SizeDTO;
 import com.example.betmdtnhom3.dto.request.CreateProductRequest;
 import com.example.betmdtnhom3.dto.request.PagenationDTO;
@@ -29,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements ProductServiceImpl {
@@ -177,7 +179,7 @@ public class ProductService implements ProductServiceImpl {
             for (ImgProduct img:imgProductList) {
                 ImgProductDTO imgProductDTO = new ImgProductDTO();
                 imgProductDTO.setImg(img.getImg());
-                imgProductDTO.setIndex(img.getIndexImg());
+                imgProductDTO.setIndexImg(img.getIndexImg());
                 imgProductDTOS.add(imgProductDTO);
             }
             productDTO.setImg(imgProductDTOS);
@@ -195,7 +197,7 @@ public class ProductService implements ProductServiceImpl {
     }
 
     @Override
-    public List<ProductDTO> getAllAdmin(String query, int select) {
+    public List<ProductListDTO> getAllAdmin(String query, int select) {
         Pageable pageable = PageRequest.of(0, 12);
         Page<Product> productsList;
         switch (select) {
@@ -209,9 +211,10 @@ public class ProductService implements ProductServiceImpl {
             default -> throw new IllegalArgumentException("Lỗi lựa chọn: " + select);
         }
 
-        List<ProductDTO> productDTOList = new ArrayList<>();
+        List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product product : productsList.getContent()) {
-            ProductDTO productDTO = productMapper.toProductDTO(product);
+            ProductListDTO productDTO = productMapper.toProductListDTO(product);
+            productDTO.setImg(product.getImgProducts().get(0).getImg());
             productDTO.setRate(rateUtilsHelper.getRate(product));
             productDTOList.add(productDTO);
         }
@@ -220,16 +223,12 @@ public class ProductService implements ProductServiceImpl {
     }
 
     @Override
-    public List<ProductDTO> getAllUser(String query, int select) {
-        return null;
-    }
-
-    @Override
-    public List<ProductDTO> getIndex() {
+    public List<ProductListDTO> getIndex() {
         List<Product> randomProducts = productReponsitory.findRandomProducts();
-        List<ProductDTO> productDTOList = new ArrayList<>();
+        List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product product : randomProducts) {
-            ProductDTO productDTO = productMapper.toProductDTO(product);
+            ProductListDTO productDTO = productMapper.toProductListDTO(product);
+            productDTO.setImg(product.getImgProducts().get(0).getImg());
             productDTO.setRate(rateUtilsHelper.getRate(product));
             productDTOList.add(productDTO);
         }
@@ -281,9 +280,10 @@ public class ProductService implements ProductServiceImpl {
             };
         }
 
-        List<ProductDTO> productDTOList = new ArrayList<>();
+        List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product products : productsPage) {
-            ProductDTO productDTO = productMapper.toProductDTO(products);
+            ProductListDTO productDTO = productMapper.toProductListDTO(products);
+            productDTO.setImg(products.getImgProducts().get(0).getImg());
             productDTO.setRate(rateUtilsHelper.getRate(products));
             productDTOList.add(productDTO);
         }
@@ -339,9 +339,10 @@ public class ProductService implements ProductServiceImpl {
             };
         }
 
-        List<ProductDTO> productDTOList = new ArrayList<>();
+        List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product products : productsPage) {
-            ProductDTO productDTO = productMapper.toProductDTO(products);
+            ProductListDTO productDTO = productMapper.toProductListDTO(products);
+            productDTO.setImg(products.getImgProducts().get(0).getImg());
             productDTO.setRate(rateUtilsHelper.getRate(products));
             productDTOList.add(productDTO);
         }
@@ -397,9 +398,10 @@ public class ProductService implements ProductServiceImpl {
             };
         }
 
-        List<ProductDTO> productDTOList = new ArrayList<>();
+        List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product products : productsPage) {
-            ProductDTO productDTO = productMapper.toProductDTO(products);
+            ProductListDTO productDTO = productMapper.toProductListDTO(products);
+            productDTO.setImg(products.getImgProducts().get(0).getImg());
             productDTO.setRate(rateUtilsHelper.getRate(products));
             productDTOList.add(productDTO);
         }

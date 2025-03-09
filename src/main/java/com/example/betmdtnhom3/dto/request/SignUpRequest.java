@@ -3,9 +3,6 @@ package com.example.betmdtnhom3.dto.request;
 import jakarta.validation.constraints.*;
 
 public class SignUpRequest {
-    @NotBlank(message = "INVALID_NAME_EMPTY")
-    @Size(min = 2, max = 45, message = "INVALID_NAME_LENGTH")
-    private String name;
     @NotBlank(message = "INVALID_PASSWORD_EMPTY")
     @Size(min = 8, max = 50, message = "INVALID_PASSWORD_LENGTH")
     private String password;
@@ -16,14 +13,6 @@ public class SignUpRequest {
     @Email(message = "INVALID_GMAIL_FORMAT")
     @Size(max = 100, message = "INVALID_GMAIL_LENGTH")
     private String gmail;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getPassword() {
         return password;

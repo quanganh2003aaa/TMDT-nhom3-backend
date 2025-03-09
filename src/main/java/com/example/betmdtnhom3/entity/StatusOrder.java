@@ -15,9 +15,14 @@ public class StatusOrder {
     private String name;
     @OneToMany(mappedBy = "statusOrder")
     private List<Order> orders;
-    @OneToMany(mappedBy = "statusOrder")
-    private List<OrderRefund> orderRefunds;
 
+    public StatusOrder(int id) {
+        this.id = id;
+    }
+
+    public StatusOrder() {
+
+    }
 
     public int getId() {
         return id;
@@ -43,11 +48,4 @@ public class StatusOrder {
         this.orders = orders;
     }
 
-    public List<OrderRefund> getOrderRefunds() {
-        return orderRefunds;
-    }
-
-    public void setOrderRefunds(List<OrderRefund> orderRefunds) {
-        this.orderRefunds = orderRefunds;
-    }
 }

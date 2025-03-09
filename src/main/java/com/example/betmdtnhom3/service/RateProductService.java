@@ -40,12 +40,10 @@ public class RateProductService implements RateProductServiceImpl{
     @Override
     public boolean create(CreateRateProductRequest createRateProductRequest) {
         boolean isSuccess = false;
-        StatusOrder statusOrder = new StatusOrder();
-        statusOrder.setId(4);
         User user = userReponsitory.findById(createRateProductRequest.getUser()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         List<DetailOrder> checkUser = detailOrderReponsitory.findAllByProduct_IdAndOrder_UserAndOrder_StatusOrder
-                (createRateProductRequest.getIdProduct(), user,statusOrder);
+                (createRateProductRequest.getIdProduct(), user,new StatusOrder(4));
         if (checkUser.isEmpty()){
             throw new AppException(ErrorCode.USER_RATE_ERROR);
         }

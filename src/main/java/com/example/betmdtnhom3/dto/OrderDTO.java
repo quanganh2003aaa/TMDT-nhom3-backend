@@ -1,5 +1,7 @@
 package com.example.betmdtnhom3.dto;
 
+import com.example.betmdtnhom3.Enum.PaymentStatus;
+
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public class OrderDTO {
     private int shippingFee;
     private int discountAmount;
     private int finalAmount;
+    private PaymentStatus paymentStatus;
     private List<DetailOrderDTO> detailOrderDTOList;
 
     public int getId() {
@@ -129,5 +132,13 @@ public class OrderDTO {
 
     public void setDetailOrderDTOList(List<DetailOrderDTO> detailOrderDTOList) {
         this.detailOrderDTOList = detailOrderDTOList;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

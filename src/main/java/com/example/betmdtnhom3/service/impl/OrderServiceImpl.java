@@ -18,5 +18,5 @@ public interface OrderServiceImpl {
     Boolean cancelOrder(int id);
     Boolean successOrder(int id);
     Boolean deleteOrder(int id);
-
+    Boolean paySuccess(int idOrder);
 }

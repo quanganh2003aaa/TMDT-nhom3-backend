@@ -1,6 +1,7 @@
 package com.example.betmdtnhom3.service;
 
 import com.example.betmdtnhom3.Enum.ErrorCode;
+import com.example.betmdtnhom3.Enum.PaymentStatus;
 import com.example.betmdtnhom3.dto.ApplyVoucherDTO;
 import com.example.betmdtnhom3.dto.DetailOrderDTO;
 import com.example.betmdtnhom3.dto.OrderDTO;
@@ -30,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService implements OrderServiceImpl {
@@ -57,6 +59,8 @@ public class OrderService implements OrderServiceImpl {
     VoucherUtilsHelper voucherUtilsHelper;
     @Autowired
     DeliveryMethodReponsitory deliveryMethodReponsitory;
+    @Autowired
+    CartReponsitory cartReponsitory;
 
     @Override
     public PagenationDTO getAllOrder(int page) {
@@ -112,17 +116,19 @@ public class OrderService implements OrderServiceImpl {
 
     @Override
     public OrderDTO getById(int id) {
-        Order order = orderReponsitory.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
-        );
+        Order order = orderReponsitory.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
         OrderDTO orderDTO = orderMapper.toOrder(order);
-        List<DetailOrderDTO> detailOrderDTOList = new ArrayList<>();
-        for (DetailOrder detail:order.getDetails()) {
-            DetailOrderDTO detailOrderDTO = detailOrderMapper.toDTO(detail);
-            detailOrderDTOList.add(detailOrderDTO);
-        }
+
+        List<DetailOrderDTO> detailOrderDTOList = order.getDetails().stream()
+                .map(detailOrderMapper::toDTO)
+                .collect(Collectors.toList());
+
         orderDTO.setDetailOrderDTOList(detailOrderDTOList);
+
         return orderDTO;
+
     }
     @Transactional(rollbackFor = {AppException.class, IOException.class, SQLException.class})
     @Override
@@ -169,9 +175,8 @@ public class OrderService implements OrderServiceImpl {
         order.setAddress(createOrderRequest.getAddress());
         order.setNote(createOrderRequest.getNote());
         order.setUser(user.get());
-        StatusOrder statusOrder = new StatusOrder();
-        statusOrder.setId(1);
-        order.setStatusOrder(statusOrder);
+        order.setStatusOrder(new StatusOrder(1));
+        order.setPaymentStatus(PaymentStatus.UNPAID);
 
         Revenue revenue = revenueReponsitory.findRevenuesByMonthAndYear(LocalDateTime.now().getMonthValue(), LocalDateTime.now().getYear());
         if (revenue == null) {
@@ -197,7 +202,7 @@ public class OrderService implements OrderServiceImpl {
         order.setTotalPrice(totalPrice);
         orderReponsitory.save(order);
         detailOrderReponsitory.saveAll(detailOrdersList);
-
+        System.out.println(order.getId());
         return true;
     }
 
@@ -207,9 +212,7 @@ public class OrderService implements OrderServiceImpl {
         Optional<Order> orders = orderReponsitory.findById(id);
         try {
             if (orders.isPresent() && orders.get().getStatusOrder().getId() == 1){
-                StatusOrder statusOrders = new StatusOrder();
-                statusOrders.setId(2);
-                orders.get().setStatusOrder(statusOrders);
+                orders.get().setStatusOrder(new StatusOrder(2));
             } else {
                 throw new AppException(ErrorCode.ORDER_ERROR);
             }
@@ -227,9 +230,7 @@ public class OrderService implements OrderServiceImpl {
         try {
             Optional<Order> orders = orderReponsitory.findById(id);
             if (orders.isPresent() && orders.get().getStatusOrder().getId() == 2){
-                StatusOrder statusOrders = new StatusOrder();
-                statusOrders.setId(3);
-                orders.get().setStatusOrder(statusOrders);
+                orders.get().setStatusOrder(new StatusOrder(3));
             } else {
                 throw new AppException(ErrorCode.ORDER_ERROR);
             }
@@ -245,17 +246,15 @@ public class OrderService implements OrderServiceImpl {
     @Override
     public Boolean cancelOrder(int id) {
         boolean isSuccess = false;
-        try {
-            Optional<Order> orders = orderReponsitory.findById(id);
-            if (orders.isPresent() ){
-                if (orders.get().getStatusOrder().getId() == 2 || orders.get().getStatusOrder().getId() == 1){
-                    StatusOrder statusOrders = new StatusOrder();
-                    statusOrders.setId(5);
-                    orders.get().setStatusOrder(statusOrders);
-                }
-            } else {
-                throw new AppException(ErrorCode.ORDER_ERROR);
+        Optional<Order> orders = orderReponsitory.findById(id);
+        if (orders.isPresent() ){
+            if (orders.get().getStatusOrder().getId() == 2 || orders.get().getStatusOrder().getId() == 1){
+                orders.get().setStatusOrder(new StatusOrder(5));
             }
+        } else {
+            throw new AppException(ErrorCode.ORDER_ERROR);
+        }
+        try {
             orderReponsitory.save(orders.get());
             isSuccess = true;
         }catch (Exception e){
@@ -279,9 +278,8 @@ public class OrderService implements OrderServiceImpl {
             throw new AppException(ErrorCode.ORDER_ERROR);
         }
 
-        StatusOrder statusOrder = new StatusOrder();
-        statusOrder.setId(4);
-        order.setStatusOrder(statusOrder);
+        order.setStatusOrder(new StatusOrder(4));
+        order.setPaymentStatus(PaymentStatus.PAID);
         orderReponsitory.save(order);
 
         LocalDateTime now = LocalDateTime.now();
@@ -312,6 +310,22 @@ public class OrderService implements OrderServiceImpl {
         );
         try {
             orderReponsitory.delete(orders);
+            isSuccess = true;
+        }catch (Exception e){
+            throw new AppException(ErrorCode.DELETE_ORDER_ERROR);
+        }
+        return isSuccess;
+    }
+
+    @Override
+    public Boolean paySuccess(int idOrder) {
+        boolean isSuccess = false;
+        Order orders = orderReponsitory.findById(idOrder).orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+        );
+        try {
+            orders.setPaymentStatus(PaymentStatus.PAID);
+            orderReponsitory.save(orders);
             isSuccess = true;
         }catch (Exception e){
             throw new AppException(ErrorCode.DELETE_ORDER_ERROR);

@@ -17,6 +17,14 @@ public class Reason {
     @OneToMany(mappedBy = "reason")
     private List<OrderRefund> orderRefunds;
 
+    public Reason(int id) {
+        this.id = id;
+    }
+
+    public Reason() {
+
+    }
+
     public int getId() {
         return id;
     }

@@ -25,6 +25,7 @@ public class CommentBlogController {
         }
         return ResponseEntity.badRequest().body("Lỗi tạo bình luận.");
     }
+
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateComment(@PathVariable int id, @RequestBody UpdateCommentBlogRequest request) {
         boolean result = commentBlogService.updateCommentBlog(id, request);
@@ -42,6 +43,7 @@ public class CommentBlogController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy bình luận!");
     }
+
     @GetMapping("/getAll")
     public ResponseEntity<List<CommentBlogDTO>> getAllCommentBlog(
         @RequestParam(value = "query", required = false, defaultValue = "") String query,
@@ -50,4 +52,9 @@ public class CommentBlogController {
         return ResponseEntity.ok(comments);
     }
 
+    @GetMapping("/blog/{id}")
+    public ResponseEntity<List<CommentBlogDTO>> getByBlog(@PathVariable int id) {
+        List<CommentBlogDTO> comments = commentBlogService.getByBlog(id);
+        return ResponseEntity.ok(comments);
+    }
 }

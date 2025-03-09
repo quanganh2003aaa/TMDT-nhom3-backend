@@ -23,6 +23,8 @@ public enum ErrorCode {
     ORDER_ERROR(2112, "Thao tác với đơn hàng bị lỗi"),
     ORDER_NOT_FOUND(2113, "Đơn hàng không tồn tại"),
     DELETE_ORDER_ERROR(2114, "Xóa đơn hàng không thành công"),
+    ORDER_REFUND_ERROR(2115, "Đơn hoàn trả bị lỗi"),
+    REVENUE_NOT_FOUND(2116, "Doanh thu bị lỗi"),
     CREATE_RATE_ERROR(3001, "Lỗi khi đánh giá sản phẩm"),
     NUMBER_RATE_ERROR(3002, "Lỗi điểm đánh giá sản phẩm"),
     CONTENT_RATE_ERROR(3003, "Nội dung đánh giá quá dài"),

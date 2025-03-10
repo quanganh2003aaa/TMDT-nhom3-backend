@@ -3,6 +3,8 @@ package com.example.betmdtnhom3.dto;
 public class ProductCartDTO {
     private String id;
     private String img;
+    private String name;
+    private int price;
     private int quantity;
     private String size;
 
@@ -36,5 +38,21 @@ public class ProductCartDTO {
 
     public void setSize(String size) {
         this.size = size;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }

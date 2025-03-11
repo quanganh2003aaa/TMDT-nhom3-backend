@@ -332,4 +332,9 @@ public class OrderService implements OrderServiceImpl {
         }
         return isSuccess;
     }
+
+    @Override
+    public long count() {
+        return orderReponsitory.count();
+    }
 }

@@ -122,6 +122,11 @@ public class UserService implements UserServiceImpl {
         return userMapper.toUserDTO(user);
     }
 
+    @Override
+    public long count() {
+        return userReponsitory.count();
+    }
+
 
     @Override
     public boolean deleteUser(String id){

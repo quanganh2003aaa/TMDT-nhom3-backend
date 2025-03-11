@@ -19,4 +19,5 @@ public interface OrderServiceImpl {
     Boolean successOrder(int id);
     Boolean deleteOrder(int id);
     Boolean paySuccess(int idOrder);
+    long count();
 }

@@ -63,4 +63,10 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countProducts() {
+        long count = userService.count();
+        return ResponseEntity.ok(count);
+    }
 }

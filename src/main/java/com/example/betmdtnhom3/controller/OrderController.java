@@ -92,4 +92,10 @@ public class OrderController {
         apiResponse.setResult(orderService.getById(id));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countProducts() {
+        long count = orderService.count();
+        return ResponseEntity.ok(count);
+    }
 }

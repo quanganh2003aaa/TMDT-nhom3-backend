@@ -410,4 +410,9 @@ public class ProductService implements ProductServiceImpl {
 
         return pagenationDTO;
     }
+
+    @Override
+    public long countProducts() {
+        return productReponsitory.count();
+    }
 }

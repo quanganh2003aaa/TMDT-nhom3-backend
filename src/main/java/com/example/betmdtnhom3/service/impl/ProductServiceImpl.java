@@ -19,4 +19,5 @@ public interface ProductServiceImpl {
     PagenationDTO getProduct(int page, int filterSort, int filterPrice, String query);
     PagenationDTO getByCategory(int category,int page, int filterSort, int filterPrice);
     PagenationDTO getByBrand(int brand, int page, int filterSort, int filterPrice);
+    long countProducts();
 }

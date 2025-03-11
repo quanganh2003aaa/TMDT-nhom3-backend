@@ -97,4 +97,10 @@ public class ProductController {
         apiResponse.setResult(productService.getIndex());
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countProducts() {
+        long count = productService.countProducts();
+        return ResponseEntity.ok(count);
+    }
 }

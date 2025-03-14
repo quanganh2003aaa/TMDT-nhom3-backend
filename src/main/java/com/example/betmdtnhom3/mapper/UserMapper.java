@@ -6,7 +6,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-//Chuyen doi du lieu giua user va userdto
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     UserDTO toUserDTO(User user);

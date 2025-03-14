@@ -81,45 +81,65 @@ public class UserService implements UserServiceImpl {
     }
 
     @Override
-    public UserDTO updateUser(String id, UpdateUserRequest request){
+    public boolean updateUser(String id, UpdateUserRequest request){
         User user = userReponsitory.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        user.setName(request.getName());
-        user.setTel(request.getTel());
 
-        InfoUser infoUser = infoUserReponsitory.findByUser(user).orElse(new InfoUser());
-
-        if (infoUser.getId() == null){
-            infoUser.setUser(user);
+        if (!user.getGmail().equals(request.getGmail()) && userReponsitory.existsByGmail(request.getGmail())){
+            throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
 
+        user.setName(request.getName());
+        user.setGmail(request.getGmail());
+        InfoUser infoUser = infoUserReponsitory.findByUser(user).orElseGet(() -> {
+            InfoUser newInfoUser = new InfoUser();
+            newInfoUser.setUser(user);
+            return newInfoUser;
+        });
         infoUser.setCity(request.getCity());
         infoUser.setDistrict(request.getDistrict());
         infoUser.setWard(request.getWard());
 
         infoUserReponsitory.save(infoUser);
         userReponsitory.save(user);
-        return userMapper.toUserDTO(user);
+        return true;
     }
 
     @Override
-    public UserDTO updateAdmin(String id, UpdateUserRequest request){
+    public boolean updateAdmin(String id, UpdateUserRequest request){
         User user = userReponsitory.findById(id).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        user.setName(request.getName());
-        user.setTel(request.getTel());
-        InfoUser infoUser = infoUserReponsitory.findByUser(user).orElse(new InfoUser());
-
-        if (infoUser.getId() == null){
-            infoUser.setUser(user);
+        if (!user.getGmail().equals(request.getGmail()) && userReponsitory.existsByGmail(request.getGmail())){
+            throw new AppException(ErrorCode.GMAIL_EXISTED);
         }
 
+        user.setName(request.getName());
+        user.setGmail(request.getGmail());
+        InfoUser infoUser = infoUserReponsitory.findByUser(user).orElse(new InfoUser());
+        infoUser.setUser(user);
         infoUser.setCity(request.getCity());
         infoUser.setDistrict(request.getDistrict());
         infoUser.setWard(request.getWard());
 
         infoUserReponsitory.save(infoUser);
         userReponsitory.save(user);
-        return userMapper.toUserDTO(user);
+        return true;
+    }
+
+    @Override
+    public UserDTO getById(String id) {
+        Optional<User> user = userReponsitory.findById(id);
+        UserDTO userDTO = null;
+        if (user.isPresent()) {
+            userDTO = userMapper.toUserDTO(user.get());
+            Optional<InfoUser> infoUserList = infoUserReponsitory.findByUser(user.get());
+            if (infoUserList.isPresent()){
+                System.out.println(11);
+                userDTO.setCity(infoUserList.get().getCity());
+                userDTO.setDistrict(infoUserList.get().getDistrict());
+                userDTO.setWard(infoUserList.get().getWard());
+            }
+        }
+        return userDTO;
     }
 
     @Override

@@ -70,8 +70,7 @@ public class ProductService implements ProductServiceImpl {
 
             int indexImg = 0;
             for (MultipartFile file : files) {
-                boolean isSaved = fileService.saveFile(file);
-                if (!isSaved) {
+                if (!fileService.saveFile(file)) {
                     throw new AppException(ErrorCode.FILE_UPLOAD_ERROR);
                 }
 

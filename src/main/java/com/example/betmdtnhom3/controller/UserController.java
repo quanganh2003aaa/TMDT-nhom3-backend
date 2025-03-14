@@ -27,6 +27,13 @@ public class UserController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/id/{id}")
+    public ResponseEntity<?> getById(@PathVariable String id){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(userService.getById(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
     @PostMapping("/createAdmin")
     public ResponseEntity<?> createAdmin(@RequestBody @Valid SignUpRequest signUpRequest){
         ApiResponse apiResponse = new ApiResponse();
@@ -43,15 +50,17 @@ public class UserController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable String id, @RequestBody UpdateUserRequest request){
-        UserDTO updateUser = userService.updateUser(id, request);
-        return ResponseEntity.ok(updateUser);
+    public ResponseEntity<?> updateUser(@PathVariable String id, @RequestBody UpdateUserRequest request){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(userService.updateUser(id, request));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @PutMapping("/updateAdmin/{id}")
-    public ResponseEntity<UserDTO> updateAdmin(@PathVariable String id, @RequestBody UpdateUserRequest request){
-        UserDTO updatedAdmin = userService.updateAdmin(id, request);
-        return ResponseEntity.ok(updatedAdmin);
+    public ResponseEntity<?> updateAdmin(@PathVariable String id, @RequestBody UpdateUserRequest request){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(userService.updateAdmin(id, request));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

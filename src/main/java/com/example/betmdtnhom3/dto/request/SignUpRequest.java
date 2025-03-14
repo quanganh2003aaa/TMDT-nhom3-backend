@@ -4,7 +4,7 @@ import jakarta.validation.constraints.*;
 
 public class SignUpRequest {
     @NotBlank(message = "INVALID_PASSWORD_EMPTY")
-    @Size(min = 8, max = 50, message = "INVALID_PASSWORD_LENGTH")
+    @Size(min = 8, max = 16, message = "INVALID_PASSWORD_LENGTH")
     private String password;
     @NotBlank(message = "INVALID_TEL_EMPTY")
     @Pattern(regexp = "^(0)[1-9]{1}[0-9]{8}$", message = "INVALID_TEL_FORMAT")

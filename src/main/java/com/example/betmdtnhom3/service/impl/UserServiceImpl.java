@@ -10,10 +10,11 @@ import java.util.List;
 public interface UserServiceImpl {
     Boolean createUser(SignUpRequest signUpRequest);
     UserDTO login(AuthenticationRequest authenticationRequest);
-    UserDTO updateUser(String id, UpdateUserRequest request);
+    boolean updateUser(String id, UpdateUserRequest request);
     boolean deleteUser(String id);
     List<UserDTO> getAllUsers();
     Boolean createAdmin(SignUpRequest signUpRequest);
-    UserDTO updateAdmin(String id, UpdateUserRequest request);
+    boolean updateAdmin(String id, UpdateUserRequest request);
+    UserDTO getById(String id);
     long count();
 }

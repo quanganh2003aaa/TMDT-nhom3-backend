@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 @Entity(name = "info_user")
 public class InfoUser {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     @Column(name = "city")
     private String city;
     @Column(name = "ward")
@@ -16,11 +17,11 @@ public class InfoUser {
     @JoinColumn(name = "user")
     private User user;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

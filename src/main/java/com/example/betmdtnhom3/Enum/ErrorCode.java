@@ -5,6 +5,8 @@ public enum ErrorCode {
     AUTHORIZATION(444, "Bạn không có quyền truy cập"),
     USER_NOT_FOUND(5404, "Tài khoản không tồn tại"),
     USER_EXISTED(5111, "Tài khoản đã tồn tại"),
+    TEL_EXISTED(5113, "Số điện thoại đã tồn tại"),
+    GMAIL_EXISTED(5114, "Gmail đã tồn tại"),
     DELETE_USER_ERROR(5112, "Xóa tài khoản thất bại"),
     INVALID_QUANTITY_ORDER(9001, "Số lượng đặt hàng lỗi"),
     INVALID_TEL(9002, "Số điện thoại không đúng định dạng"),

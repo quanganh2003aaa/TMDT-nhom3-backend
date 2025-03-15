@@ -12,4 +12,5 @@ public interface CommentBlogServiceImpl {
     Boolean deteleCommentBlog(int id);
     List<CommentBlogDTO> getAllCommentBlog(String query, int select);
     List<CommentBlogDTO> getByBlog(int blogId);
+    List<CommentBlogDTO> getByUser(String idUser);
 }

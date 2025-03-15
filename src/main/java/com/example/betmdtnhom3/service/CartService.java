@@ -7,7 +7,6 @@ import com.example.betmdtnhom3.dto.request.AddToCartRequest;
 import com.example.betmdtnhom3.dto.request.UpdateCartRequest;
 import com.example.betmdtnhom3.entity.CartUser;
 import com.example.betmdtnhom3.entity.Product;
-import com.example.betmdtnhom3.entity.Size;
 import com.example.betmdtnhom3.entity.User;
 import com.example.betmdtnhom3.exception.AppException;
 import com.example.betmdtnhom3.responsitory.CartReponsitory;

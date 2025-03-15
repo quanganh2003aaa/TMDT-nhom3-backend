@@ -14,4 +14,5 @@ public interface RateProductReponsitory extends JpaRepository<RateProduct, Integ
     Page<RateProduct> findAllByProduct(Product product, Pageable pageable);
     List<RateProduct> findAllByProductAndUser(Product product, User user);
     List<RateProduct> findAllByProduct(Product product);
+    Page<RateProduct> findAllByUser(User user, Pageable pageable);
 }

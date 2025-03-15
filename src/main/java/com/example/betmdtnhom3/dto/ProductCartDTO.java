@@ -2,6 +2,7 @@ package com.example.betmdtnhom3.dto;
 
 public class ProductCartDTO {
     private String id;
+    private String idProduct;
     private String img;
     private String name;
     private int price;
@@ -14,6 +15,14 @@ public class ProductCartDTO {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getIdProduct() {
+        return idProduct;
+    }
+
+    public void setIdProduct(String idProduct) {
+        this.idProduct = idProduct;
     }
 
     public String getImg() {

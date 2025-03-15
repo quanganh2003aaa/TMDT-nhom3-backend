@@ -20,7 +20,9 @@ public interface OrderReponsitory extends JpaRepository<Order, Integer> {
     @Query("SELECT o FROM orders o WHERE CAST(o.id AS string) LIKE %:partialId%")
     Page<Order> findByPartialIdOrder(@Param("partialId") String partialId, Pageable pageable);
     @Query("SELECT p FROM orders p WHERE CAST(p.id AS string) LIKE %:partialId% AND p.statusOrder.id = :statusOrder")
-    Page<Order> findByPartialIdOrderAndStatusOrders(@Param("partialId") String partialId, @Param("statusOrder") int status, Pageable pageable);
+    Page<Order> findByPartialIdOrderAndStatusOrders(@Param("partialId") String partialId,
+                                                    @Param("statusOrder") int status,
+                                                    Pageable pageable);
     Order findByIdAndUser(int id, User user);
 
 }

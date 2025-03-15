@@ -57,4 +57,10 @@ public class CommentBlogController {
         List<CommentBlogDTO> comments = commentBlogService.getByBlog(id);
         return ResponseEntity.ok(comments);
     }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<CommentBlogDTO>> getByUser(@PathVariable String id) {
+        List<CommentBlogDTO> comments = commentBlogService.getByUser(id);
+        return ResponseEntity.ok(comments);
+    }
 }

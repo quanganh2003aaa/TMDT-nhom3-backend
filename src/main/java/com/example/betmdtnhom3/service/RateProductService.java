@@ -98,6 +98,33 @@ public class RateProductService implements RateProductServiceImpl{
     }
 
     @Override
+    public PagenationDTO getByUser(String idUser, int page) {
+        Pageable pageable = PageRequest.of(page - 1, 5, Sort.by(Sort.Direction.DESC, "createdDate"));
+        PagenationDTO pagenationDTO = new PagenationDTO();
+        User user = userReponsitory.findById(idUser).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)
+        );
+        Page<RateProduct> rateProductPage = rateProductReponsitory.findAllByUser(user, pageable);
+
+        List<RateProductDTO> rateProductDTOS = new ArrayList<>();
+        for (RateProduct rateProduct: rateProductPage) {
+            RateProductDTO rateProductDTO = new RateProductDTO();
+            rateProductDTO.setRate(rateProduct.getRate());
+            rateProductDTO.setContent(rateProduct.getContent());
+            rateProductDTO.setCreatedDate(rateProduct.getCreatedDate());
+            rateProductDTO.setIdProduct(rateProduct.getProduct().getId());
+            rateProductDTO.setNameProduct(rateProduct.getProduct().getName());
+            rateProductDTO.setUser(rateProduct.getUser().getName());
+
+            rateProductDTOS.add(rateProductDTO);
+        }
+        pagenationDTO.setTotalPages(rateProductPage.getTotalPages());
+        pagenationDTO.setObjectList(rateProductDTOS);
+
+        return pagenationDTO;
+    }
+
+    @Override
     public boolean update(int id, UpdateRateRequest updateRateRequest){
         RateProduct rateProduct = rateProductReponsitory.findById(id).orElseThrow(() -> new AppException(ErrorCode.RATE_NOT_FOUND));
 

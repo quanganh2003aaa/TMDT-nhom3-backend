@@ -94,5 +94,16 @@ public class CommentBlogService implements CommentBlogServiceImpl {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<CommentBlogDTO> getByUser(String idUser) {
+        User user = userReponsitory.findById(idUser).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)
+        );
+        List<CommentBlog> comments = commentBlogRepository.findByUser(user);
+        return comments.stream()
+                .map(commentBlogMapper::toCmtBlogDTO)
+                .collect(Collectors.toList());
+    }
+
 }
 

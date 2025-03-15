@@ -23,6 +23,13 @@ public class RateProductController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
+    @GetMapping("user/{id}")
+    public ResponseEntity<?> getByUser(@PathVariable String id, @RequestParam(defaultValue = "1", required = false) int page){
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(rateProductService.getByUser(id, page));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<?> createRateProduct(@RequestBody @Valid CreateRateProductRequest createRateProductRequest){
         ApiResponse apiResponse = new ApiResponse();

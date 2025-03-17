@@ -12,7 +12,8 @@ public interface UserServiceImpl {
     UserDTO login(AuthenticationRequest authenticationRequest);
     boolean updateUser(String id, UpdateUserRequest request);
     boolean deleteUser(String id);
-    List<UserDTO> getAllUsers();
+    List<UserDTO> getAllAdmin();
+    List<UserDTO> getAllClient();
     Boolean createAdmin(SignUpRequest signUpRequest);
     boolean updateAdmin(String id, UpdateUserRequest request);
     UserDTO getById(String id);

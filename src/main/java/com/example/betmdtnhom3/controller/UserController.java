@@ -75,9 +75,14 @@ public class UserController {
         return userService.deleteUser(id) ? ResponseEntity.ok("Xoá thành công") : ResponseEntity.badRequest().body("Xóa thất bại");
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<UserDTO>> getAllUsers(){
-        return ResponseEntity.ok(userService.getAllUsers());
+    @GetMapping("/list/admin")
+    public ResponseEntity<List<UserDTO>> getAllAdmin(){
+        return ResponseEntity.ok(userService.getAllAdmin());
+    }
+
+    @GetMapping("/list/client")
+    public ResponseEntity<List<UserDTO>> getAllClient(){
+        return ResponseEntity.ok(userService.getAllClient());
     }
 
     @GetMapping("/count")

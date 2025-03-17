@@ -165,7 +165,13 @@ public class UserService implements UserServiceImpl {
     }
 
     @Override
-    public List<UserDTO> getAllUsers(){
-        return userReponsitory.findAll().stream().map(userMapper::toUserDTO).collect(Collectors.toList());
+    public List<UserDTO> getAllAdmin() {
+        return userReponsitory.findAllByRole(Role.ADMIN).stream().map(userMapper::toUserDTO).collect(Collectors.toList());
     }
+
+    @Override
+    public List<UserDTO> getAllClient() {
+        return userReponsitory.findAllByRole(Role.USER).stream().map(userMapper::toUserDTO).collect(Collectors.toList());
+    }
+
 }

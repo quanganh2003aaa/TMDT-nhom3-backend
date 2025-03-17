@@ -129,8 +129,9 @@ public class CartService implements CartUserServiceImpl{
         int totalPrice = 0;
         for (CartUser cart:cartUser) {
             ProductCartDTO productCartDTO = new ProductCartDTO();
-            productCartDTO.setId(cart.getProduct().getId());
-            productCartDTO.setImg(String.valueOf(cart.getProduct().getImgProducts().get(0)));
+            productCartDTO.setId(cart.getId());
+            productCartDTO.setIdProduct(cart.getProduct().getId());
+            productCartDTO.setImg(String.valueOf(cart.getProduct().getImgProducts().get(0).getImg()));
             productCartDTO.setQuantity(cart.getQuantity());
             productCartDTO.setSize(cart.getSize());
             productCartDTO.setName(cart.getProduct().getName());

@@ -12,10 +12,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductReponsitory extends JpaRepository<Product, String> {
     Product findProductsById(String id);
+
+    @Query("SELECT p FROM products p WHERE p.quantity >= :quantity AND CAST(p.id AS string) LIKE %:id%")
+    Optional<Product> findByQuantityGreaterThanAndIdContaining(@Param("quantity") int quantity, @Param("id") String id);
 
     @Query(value = "SELECT * FROM products WHERE category = 1 ORDER BY RAND() LIMIT 4", nativeQuery = true)
     List<Product> findRandomProducts();

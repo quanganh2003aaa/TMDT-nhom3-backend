@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,11 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserServiceImpl userService;
+    private final JavaMailSender mailSender;
+
+    public UserController(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody @Valid SignUpRequest signUpRequest){
@@ -77,5 +84,24 @@ public class UserController {
     public ResponseEntity<Long> countProducts() {
         long count = userService.count();
         return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/gmail")
+    public String gmail() {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("hopeso2k3@gmail.com");
+            message.setTo("phamquanganh20122003@gmail.com");
+            message.setSubject("test test");
+            message.setText("text test");
+
+            mailSender.send(message);
+            return "true";
+        } catch (Exception e){
+            System.out.println(1);
+            return e.getMessage();
+        }
+
+
     }
 }

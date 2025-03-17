@@ -133,7 +133,6 @@ public class UserService implements UserServiceImpl {
             userDTO = userMapper.toUserDTO(user.get());
             Optional<InfoUser> infoUserList = infoUserReponsitory.findByUser(user.get());
             if (infoUserList.isPresent()){
-                System.out.println(11);
                 userDTO.setCity(infoUserList.get().getCity());
                 userDTO.setDistrict(infoUserList.get().getDistrict());
                 userDTO.setWard(infoUserList.get().getWard());

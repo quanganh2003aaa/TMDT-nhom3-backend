@@ -14,8 +14,8 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
-    @Mapping(source = "category.name", target = "category")
-    @Mapping(source = "brand.name", target = "brand")
+    @Mapping(source = "category.id", target = "category")
+    @Mapping(source = "brand.id", target = "brand")
     ProductDTO toProductDTO(Product product);
 
     @Mapping(source = "category", target = "category", qualifiedByName = "IntToCategory")

@@ -143,8 +143,8 @@ public class OrderService implements OrderServiceImpl {
         List<DetailOrder> detailOrdersList = new ArrayList<>();
 
         for (DetailOrderRequest detailRequest : createOrderRequest.getDetailOrderRequestList()) {
-            Product product = productReponsitory.findById(detailRequest.getId())
-                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+            Product product = productReponsitory.findByQuantityGreaterThanAndIdContaining(detailRequest.getQuantity(),detailRequest.getId())
+                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_ENOUGH));
 
             List<Size> sizes = sizeReponsitory.findAllByProduct(product);
             if (!sizeUtilsHelper.isSizeAvailable(sizes, detailRequest.getSize())) {
@@ -202,7 +202,6 @@ public class OrderService implements OrderServiceImpl {
         order.setTotalPrice(totalPrice);
         orderReponsitory.save(order);
         detailOrderReponsitory.saveAll(detailOrdersList);
-        System.out.println(order.getId());
         return true;
     }
 

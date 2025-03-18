@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -194,8 +195,9 @@ public class ProductService implements ProductServiceImpl {
         List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product product : productsList.getContent()) {
             ProductListDTO productDTO = productMapper.toProductListDTO(product);
-            productDTO.setImg(product.getImgProducts().get(0).getImg());
+            productDTO.setImg(getFirstImage(product));
             productDTO.setRate(rateUtilsHelper.getRate(product));
+
             productDTOList.add(productDTO);
         }
 
@@ -208,7 +210,7 @@ public class ProductService implements ProductServiceImpl {
         List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product product : randomProducts) {
             ProductListDTO productDTO = productMapper.toProductListDTO(product);
-            productDTO.setImg(product.getImgProducts().get(0).getImg());
+            productDTO.setImg(getFirstImage(product));
             productDTO.setRate(rateUtilsHelper.getRate(product));
             productDTOList.add(productDTO);
         }
@@ -263,7 +265,7 @@ public class ProductService implements ProductServiceImpl {
         List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product products : productsPage) {
             ProductListDTO productDTO = productMapper.toProductListDTO(products);
-            productDTO.setImg(products.getImgProducts().get(0).getImg());
+            productDTO.setImg(getFirstImage(products));
             productDTO.setRate(rateUtilsHelper.getRate(products));
             productDTOList.add(productDTO);
         }
@@ -322,7 +324,7 @@ public class ProductService implements ProductServiceImpl {
         List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product products : productsPage) {
             ProductListDTO productDTO = productMapper.toProductListDTO(products);
-            productDTO.setImg(products.getImgProducts().get(0).getImg());
+            productDTO.setImg(getFirstImage(products));
             productDTO.setRate(rateUtilsHelper.getRate(products));
             productDTOList.add(productDTO);
         }
@@ -381,7 +383,7 @@ public class ProductService implements ProductServiceImpl {
         List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product products : productsPage) {
             ProductListDTO productDTO = productMapper.toProductListDTO(products);
-            productDTO.setImg(products.getImgProducts().get(0).getImg());
+            productDTO.setImg(getFirstImage(products));
             productDTO.setRate(rateUtilsHelper.getRate(products));
             productDTOList.add(productDTO);
         }
@@ -394,5 +396,14 @@ public class ProductService implements ProductServiceImpl {
     @Override
     public long countProducts() {
         return productReponsitory.count();
+    }
+
+    public String getFirstImage(Product product) {
+        return product.getImgProducts()
+                .stream()
+                .filter(img -> img.getIndexImg() == 0)
+                .map(ImgProduct::getImg)
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -67,28 +67,7 @@ public class ProductService implements ProductServiceImpl {
 
         try {
             productReponsitory.save(product);
-
-            List<ImgProduct> imgProducts = new ArrayList<>();
-
-            int indexImg = 0;
-            for (MultipartFile file : files) {
-                if (!fileService.saveFile(file)) {
-                    throw new AppException(ErrorCode.FILE_UPLOAD_ERROR);
-                }
-
-                ImgProduct imgProduct = new ImgProduct();
-                imgProduct.setProduct(product);
-                imgProduct.setImg(file.getOriginalFilename());
-                if (indexImg == 0) {
-                    imgProduct.setIndexImg(0);
-                    indexImg++;
-                } else {
-                    imgProduct.setIndexImg(1);
-                }
-                imgProducts.add(imgProduct);
-            }
-
-            imgProductReponsitory.saveAll(imgProducts);
+            fileImgUtilsHelper.saveProductImages(files,product);
 
             List<String> sizes = sizeUtilsHelper.parseSizes(createProductRequest.getSize());
             for (String size : sizes) {

@@ -40,7 +40,6 @@ public class ProductController {
     public ResponseEntity<?> update(@PathVariable String id,
                                     @RequestParam("files") List<MultipartFile> files,
                                     @ModelAttribute UpdateProductRequest updateProductRequest){
-        System.out.println(1);
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(productService.update(id, files, updateProductRequest));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);

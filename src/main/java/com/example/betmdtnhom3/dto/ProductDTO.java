@@ -1,5 +1,7 @@
 package com.example.betmdtnhom3.dto;
 
+import com.example.betmdtnhom3.Enum.StatusProduct;
+
 import java.util.List;
 
 public class ProductDTO {
@@ -9,7 +11,7 @@ public class ProductDTO {
     private int brand;
     private int category;
     private int price;
-    private int quantity;
+    private StatusProduct status;
     private String description;
     private Double rate;
     private List<String> sizeList;
@@ -62,12 +64,12 @@ public class ProductDTO {
         this.price = price;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public StatusProduct getStatus() {
+        return status;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setStatus(StatusProduct status) {
+        this.status = status;
     }
 
     public String getDescription() {

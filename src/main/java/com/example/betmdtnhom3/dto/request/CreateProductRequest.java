@@ -5,7 +5,7 @@ public class CreateProductRequest {
     private String name;
     private String size;
     private int price;
-    private int quantity;
+    private int status;
     private String description;
     private int category;
     private int brand;
@@ -42,12 +42,12 @@ public class CreateProductRequest {
         this.price = price;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getStatus() {
+        return status;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getDescription() {

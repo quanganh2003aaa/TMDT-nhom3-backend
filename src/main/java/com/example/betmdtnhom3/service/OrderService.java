@@ -2,10 +2,8 @@ package com.example.betmdtnhom3.service;
 
 import com.example.betmdtnhom3.Enum.ErrorCode;
 import com.example.betmdtnhom3.Enum.PaymentStatus;
-import com.example.betmdtnhom3.dto.ApplyVoucherDTO;
-import com.example.betmdtnhom3.dto.DetailOrderDTO;
-import com.example.betmdtnhom3.dto.OrderDTO;
-import com.example.betmdtnhom3.dto.OrderListDTO;
+import com.example.betmdtnhom3.Enum.StatusProduct;
+import com.example.betmdtnhom3.dto.*;
 import com.example.betmdtnhom3.dto.request.CreateOrderRequest;
 import com.example.betmdtnhom3.dto.request.DetailOrderRequest;
 import com.example.betmdtnhom3.dto.request.PagenationDTO;
@@ -132,7 +130,8 @@ public class OrderService implements OrderServiceImpl {
     }
     @Transactional(rollbackFor = {AppException.class, IOException.class, SQLException.class})
     @Override
-    public Boolean createOrder(CreateOrderRequest createOrderRequest) {
+    public CreateOrderDTO createOrder(CreateOrderRequest createOrderRequest) {
+        CreateOrderDTO createOrderDTO = new CreateOrderDTO();
         Optional<User> user = userReponsitory.findById(createOrderRequest.getUser());
         if (user.isEmpty()) {
             throw new AppException(ErrorCode.USER_NOT_FOUND);
@@ -143,7 +142,7 @@ public class OrderService implements OrderServiceImpl {
         List<DetailOrder> detailOrdersList = new ArrayList<>();
 
         for (DetailOrderRequest detailRequest : createOrderRequest.getDetailOrderRequestList()) {
-            Product product = productReponsitory.findByQuantityGreaterThanAndIdContaining(detailRequest.getQuantity(),detailRequest.getId())
+            Product product = productReponsitory.findByIdAndStatusProduct(detailRequest.getId(), StatusProduct.ACTIVE)
                     .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_ENOUGH));
 
             List<Size> sizes = sizeReponsitory.findAllByProduct(product);
@@ -160,7 +159,6 @@ public class OrderService implements OrderServiceImpl {
             detailOrder.setSize(detailRequest.getSize());
             detailOrdersList.add(detailOrder);
 
-            product.setQuantity(product.getQuantity() - detailRequest.getQuantity());
             productReponsitory.save(product);
             totalPrice += priceProduct;
         }
@@ -200,9 +198,14 @@ public class OrderService implements OrderServiceImpl {
         }
 
         order.setTotalPrice(totalPrice);
+        List<CartUser> cartUserList = cartReponsitory.findAllByUser(user.get());
         orderReponsitory.save(order);
         detailOrderReponsitory.saveAll(detailOrdersList);
-        return true;
+        cartReponsitory.deleteAll(cartUserList);
+
+        createOrderDTO.setIdOrder(order.getId());
+        createOrderDTO.setSuccess(true);
+        return createOrderDTO;
     }
 
     @Override

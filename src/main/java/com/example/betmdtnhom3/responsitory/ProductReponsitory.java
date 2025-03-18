@@ -1,5 +1,6 @@
 package com.example.betmdtnhom3.responsitory;
 
+import com.example.betmdtnhom3.Enum.StatusProduct;
 import com.example.betmdtnhom3.entity.Brand;
 import com.example.betmdtnhom3.entity.Category;
 import com.example.betmdtnhom3.entity.Product;
@@ -17,9 +18,14 @@ import java.util.Optional;
 @Repository
 public interface ProductReponsitory extends JpaRepository<Product, String> {
     Product findProductsById(String id);
-
-    @Query("SELECT p FROM products p WHERE p.quantity >= :quantity AND CAST(p.id AS string) LIKE %:id%")
-    Optional<Product> findByQuantityGreaterThanAndIdContaining(@Param("quantity") int quantity, @Param("id") String id);
+    Optional<Product> findByIdAndStatusProduct(String id, StatusProduct statusProduct);
+    @Query("SELECT p FROM products p " +
+            "WHERE p.statusProduct = :statusProduct " +
+            "AND LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<Product> findByStatusAndKeyword(
+            @Param("statusProduct") StatusProduct statusProduct,
+            @Param("keyword") String keyword,
+            Pageable pageable);
 
     @Query(value = "SELECT * FROM products WHERE category = 1 ORDER BY RAND() LIMIT 4", nativeQuery = true)
     List<Product> findRandomProducts();
@@ -58,12 +64,6 @@ public interface ProductReponsitory extends JpaRepository<Product, String> {
             @Param("minPrice") double minPrice,
             @Param("maxPrice") double maxPrice,
             Pageable pageable);
-
-    @Query("SELECT p FROM products p WHERE CAST(p.description AS string) LIKE %:partialId% AND p.quantity < 5")
-    Page<Product> findByPartialIdProductQuantityLessThan(
-            @Param("partialId") String partialId,
-            Pageable pageable
-    );
 
     // Tìm theo brand và khoảng giá
     @Query("SELECT p FROM products p WHERE p.price BETWEEN :minPrice AND :maxPrice AND p.brand.id = :brand")

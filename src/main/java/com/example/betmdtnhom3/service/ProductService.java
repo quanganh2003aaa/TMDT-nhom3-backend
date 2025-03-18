@@ -1,6 +1,7 @@
 package com.example.betmdtnhom3.service;
 
 import com.example.betmdtnhom3.Enum.ErrorCode;
+import com.example.betmdtnhom3.Enum.StatusProduct;
 import com.example.betmdtnhom3.dto.ImgProductDTO;
 import com.example.betmdtnhom3.dto.ProductDTO;
 import com.example.betmdtnhom3.dto.ProductListDTO;
@@ -62,6 +63,7 @@ public class ProductService implements ProductServiceImpl {
         }
 
         Product product = productMapper.toProductCreate(createProductRequest);
+        product.setStatusProduct(createProductRequest.getStatus()==0?StatusProduct.INACTIVE:StatusProduct.ACTIVE);
 
         try {
             productReponsitory.save(product);
@@ -124,7 +126,7 @@ public class ProductService implements ProductServiceImpl {
             product.setName(updateProductRequest.getName());
             product.setPrice(updateProductRequest.getPrice());
             product.setDescription(updateProductRequest.getDescription());
-            product.setQuantity(updateProductRequest.getQuantity());
+            product.setStatusProduct(updateProductRequest.getStatus()==0? StatusProduct.INACTIVE:StatusProduct.ACTIVE);
 
             productReponsitory.save(product);
             isSuccess = true;
@@ -204,7 +206,7 @@ public class ProductService implements ProductServiceImpl {
             case 1 -> productsList = productReponsitory.findByPartialIdProductAndCategory(query, 1, pageable);
             case 2 -> productsList = productReponsitory.findByPartialIdProductAndCategory(query, 2, pageable);
             case 3 -> productsList = productReponsitory.findByPartialIdProductAndCategory(query, 3, pageable);
-            case 4 -> productsList = productReponsitory.findByPartialIdProductQuantityLessThan(query, pageable);
+            case 4 -> productsList = productReponsitory.findByStatusAndKeyword(StatusProduct.INACTIVE,query,pageable);
             case 5 -> productsList = productReponsitory.findByPartialIdProductOrderByPriceAsc(query, pageable);
             case 6 -> productsList = productReponsitory.findByPartialIdProductOrderByPriceDesc(query, pageable);
             default -> throw new IllegalArgumentException("Lỗi lựa chọn: " + select);

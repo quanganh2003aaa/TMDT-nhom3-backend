@@ -31,7 +31,7 @@ public class PaymentController {
 
     @GetMapping("/vn-pay-callback")
     public RedirectView payCallbackHandler(HttpServletRequest request) {
-        String redirectUrl = "http://127.0.0.1:5501/thankyou.html";
+        String redirectUrl = "http://localhost:3000/thankyou";
         try {
             String idOrder = request.getParameter("vnp_OrderInfo");
             String responseCode = request.getParameter("vnp_ResponseCode");

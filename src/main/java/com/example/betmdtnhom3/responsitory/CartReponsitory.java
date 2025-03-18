@@ -21,5 +21,6 @@ public interface CartReponsitory extends JpaRepository<CartUser, Integer> {
     Optional<CartUser> findByUserAndProductAndSize(@Param("user") String userId,
                                                    @Param("product") String productId,
                                                    @Param("size") String size);
-
+    List<CartUser> findAllByUser(User user);
+    boolean deleteAllByUser(User user);
 }

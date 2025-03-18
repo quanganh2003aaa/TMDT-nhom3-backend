@@ -146,7 +146,6 @@ public class UserService implements UserServiceImpl {
         return userReponsitory.count();
     }
 
-
     @Override
     public boolean deleteUser(String id){
         boolean isSuccess = false;

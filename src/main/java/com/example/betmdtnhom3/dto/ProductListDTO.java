@@ -1,11 +1,14 @@
 package com.example.betmdtnhom3.dto;
 
+import com.example.betmdtnhom3.Enum.StatusProduct;
+
 public class ProductListDTO {
     private String id;
     private String name;
     private String img;
     private int price;
     private Double rate;
+    private StatusProduct statusProduct;
 
     public String getId() {
         return id;
@@ -45,5 +48,13 @@ public class ProductListDTO {
 
     public void setRate(Double rate) {
         this.rate = rate;
+    }
+
+    public StatusProduct getStatusProduct() {
+        return statusProduct;
+    }
+
+    public void setStatusProduct(StatusProduct statusProduct) {
+        this.statusProduct = statusProduct;
     }
 }

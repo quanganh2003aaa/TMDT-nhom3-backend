@@ -1,5 +1,6 @@
 package com.example.betmdtnhom3.entity;
 
+import com.example.betmdtnhom3.Enum.StatusProduct;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -12,8 +13,9 @@ public class Product {
     private String name;
     @Column(name = "price")
     private int price;
-    @Column(name = "quantity")
-    private int quantity;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private StatusProduct statusProduct;
     @Column(name = "description")
     private String description;
 
@@ -64,12 +66,12 @@ public class Product {
         this.price = price;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public StatusProduct getStatusProduct() {
+        return statusProduct;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setStatusProduct(StatusProduct statusProduct) {
+        this.statusProduct = statusProduct;
     }
 
     public String getDescription() {

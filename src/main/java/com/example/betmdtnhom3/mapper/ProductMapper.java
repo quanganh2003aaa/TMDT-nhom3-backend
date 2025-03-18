@@ -16,6 +16,7 @@ import org.mapstruct.Named;
 public interface ProductMapper {
     @Mapping(source = "category.id", target = "category")
     @Mapping(source = "brand.id", target = "brand")
+    @Mapping(source = "statusProduct", target = "status")
     ProductDTO toProductDTO(Product product);
 
     @Mapping(source = "category", target = "category", qualifiedByName = "IntToCategory")

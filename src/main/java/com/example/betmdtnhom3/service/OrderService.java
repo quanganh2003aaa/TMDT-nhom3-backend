@@ -143,7 +143,7 @@ public class OrderService implements OrderServiceImpl {
 
         for (DetailOrderRequest detailRequest : createOrderRequest.getDetailOrderRequestList()) {
             Product product = productReponsitory.findByIdAndStatusProduct(detailRequest.getId(), StatusProduct.ACTIVE)
-                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_ENOUGH));
+                    .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_INACTIVE));
 
             List<Size> sizes = sizeReponsitory.findAllByProduct(product);
             if (!sizeUtilsHelper.isSizeAvailable(sizes, detailRequest.getSize())) {

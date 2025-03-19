@@ -77,4 +77,12 @@ public class CategoryService  implements CategoryServiceImpl {
        }
         return categoryDTOList;
     }
+
+    @Override
+    public CategoryDTO getById(int id) {
+        Category category = categoryReponsitory.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.CATEGORY_NOT_FOUND)
+        );
+        return categoryMapper.toCateDTO(category);
+    }
 }

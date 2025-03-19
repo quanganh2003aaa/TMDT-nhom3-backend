@@ -39,4 +39,10 @@ public class CategoryController {
         apiResponse.setResult(categoryService.getAll(query, select));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+    @GetMapping("/id/{id}")
+    public ResponseEntity<?> getById(@PathVariable int id) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(categoryService.getById(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 }

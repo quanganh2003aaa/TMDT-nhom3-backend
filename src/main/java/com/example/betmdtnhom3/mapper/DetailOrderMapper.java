@@ -11,15 +11,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface DetailOrderMapper {
     @Mapping(source = "idProductHistory", target = "idProduct")
-    @Mapping(source = "product.name", target = "nameProduct")
-    @Mapping(target = "imgProduct", expression = "java(getFirstImage(detailOrder.getProduct().getImgProducts()))")
     @Mapping(source = "product.price", target = "price")
     @Mapping(source = "size", target = "size")
     @Mapping(source = "quantity", target = "quantity")
     DetailOrderDTO toDTO(DetailOrder detailOrder);
-
-    default String getFirstImage(List<ImgProduct> imgProducts) {
-        return (imgProducts != null && !imgProducts.isEmpty()) ? imgProducts.get(0).getImg() : null;
-    }
 
 }

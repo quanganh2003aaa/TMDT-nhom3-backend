@@ -9,4 +9,5 @@ public interface CategoryServiceImpl {
     Boolean updateCategory(int categoryId, String cate);
     Boolean deleteCategory(int id);
     List<CategoryDTO> getAll(String query, int select);
+    CategoryDTO getById(int id);
 }

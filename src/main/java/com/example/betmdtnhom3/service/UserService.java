@@ -53,6 +53,7 @@ public class UserService implements UserServiceImpl {
             user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
             user.setTel(signUpRequest.getTel());
             user.setGmail(signUpRequest.getGmail());
+            user.setName(signUpRequest.getName());
             user.setRole(role);
             try {
                 userReponsitory.save(user);

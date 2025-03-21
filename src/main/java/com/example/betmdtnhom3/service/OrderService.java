@@ -12,6 +12,7 @@ import com.example.betmdtnhom3.exception.AppException;
 import com.example.betmdtnhom3.mapper.DetailOrderMapper;
 import com.example.betmdtnhom3.mapper.OrderMapper;
 import com.example.betmdtnhom3.responsitory.*;
+import com.example.betmdtnhom3.service.impl.GmailServiceImpl;
 import com.example.betmdtnhom3.service.impl.OrderServiceImpl;
 import com.example.betmdtnhom3.utils.SizeUtilsHelper;
 import com.example.betmdtnhom3.utils.VoucherUtilsHelper;
@@ -59,6 +60,8 @@ public class OrderService implements OrderServiceImpl {
     DeliveryMethodReponsitory deliveryMethodReponsitory;
     @Autowired
     CartReponsitory cartReponsitory;
+    @Autowired
+    GmailServiceImpl gmailService;
 
     @Override
     public PagenationDTO getAllOrder(int page) {
@@ -175,7 +178,7 @@ public class OrderService implements OrderServiceImpl {
         order.setUser(user.get());
         order.setStatusOrder(new StatusOrder(1));
         order.setPaymentStatus(PaymentStatus.UNPAID);
-
+        order.setTotalPrice(totalPrice);
         Revenue revenue = revenueReponsitory.findRevenuesByMonthAndYear(LocalDateTime.now().getMonthValue(), LocalDateTime.now().getYear());
         if (revenue == null) {
             revenue = new Revenue();
@@ -197,7 +200,7 @@ public class OrderService implements OrderServiceImpl {
             order.setVoucher(voucher);
         }
 
-        order.setTotalPrice(totalPrice);
+
         List<CartUser> cartUserList = cartReponsitory.findAllByUser(user.get());
         orderReponsitory.save(order);
         detailOrderReponsitory.saveAll(detailOrdersList);
@@ -219,6 +222,14 @@ public class OrderService implements OrderServiceImpl {
                 throw new AppException(ErrorCode.ORDER_ERROR);
             }
             orderReponsitory.save(orders.get());
+
+            OrderGmailDTO orderGmailDTO = orderMapper.toOrderGmail(orders.get());
+
+            List<DetailOrderDTO> detailOrderDTOList = orders.get().getDetails().stream()
+                    .map(detailOrderMapper::toDTO)
+                    .collect(Collectors.toList());
+            orderGmailDTO.setDetailOrderDTOList(detailOrderDTOList);
+            gmailService.sendOrderGmail(orders.get().getUser().getGmail(), orderGmailDTO);
             isSuccess = true;
         }catch (Exception e){
             throw new AppException(ErrorCode.ORDER_ERROR);

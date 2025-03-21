@@ -2,10 +2,13 @@ package com.example.betmdtnhom3.controller;
 
 import com.example.betmdtnhom3.dto.UserDTO;
 import com.example.betmdtnhom3.dto.request.AuthenticationRequest;
+import com.example.betmdtnhom3.dto.request.OTPRequest;
 import com.example.betmdtnhom3.dto.request.SignUpRequest;
 import com.example.betmdtnhom3.dto.request.UpdateUserRequest;
 import com.example.betmdtnhom3.payload.ApiResponse;
+import com.example.betmdtnhom3.service.impl.GmailServiceImpl;
 import com.example.betmdtnhom3.service.impl.UserServiceImpl;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +17,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -21,11 +25,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserServiceImpl userService;
-    private final JavaMailSender mailSender;
-
-    public UserController(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
+    @Autowired
+    GmailServiceImpl gmailService;
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody @Valid SignUpRequest signUpRequest){
@@ -91,22 +92,8 @@ public class UserController {
         return ResponseEntity.ok(count);
     }
 
-    @GetMapping("/gmail")
-    public String gmail() {
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("hopeso2k3@gmail.com");
-            message.setTo("phamquanganh20122003@gmail.com");
-            message.setSubject("test test");
-            message.setText("text test");
-
-            mailSender.send(message);
-            return "true";
-        } catch (Exception e){
-            System.out.println(1);
-            return e.getMessage();
-        }
-
-
+    @PostMapping("/otp")
+    public boolean otp(@RequestBody @Valid OTPRequest otpRequest) throws MessagingException, IOException {
+        return gmailService.sendOTPGmail(otpRequest.getGmail());
     }
 }

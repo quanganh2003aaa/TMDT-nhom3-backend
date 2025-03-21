@@ -2,6 +2,7 @@ package com.example.betmdtnhom3.dto;
 
 public class DetailOrderDTO {
     private String idProduct;
+    private String nameProduct;
     private int quantity;
     private int price;
     private String size;
@@ -36,5 +37,13 @@ public class DetailOrderDTO {
 
     public void setSize(String size) {
         this.size = size;
+    }
+
+    public String getNameProduct() {
+        return nameProduct;
+    }
+
+    public void setNameProduct(String nameProduct) {
+        this.nameProduct = nameProduct;
     }
 }

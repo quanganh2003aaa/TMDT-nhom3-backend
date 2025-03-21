@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Đơn Hàng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+        .container {
+            width: 50%;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: #5b5b5b;
+        }
+        hr {
+            border: 1px solid #a0a0a0;
+            margin: 10px 0;
+        }
+        .order-details, .shipping-info {
+            margin-bottom: 20px;
+        }
+        .product {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 0;
+        }
+        .product-info {
+            flex-grow: 1;
+        }
+        .product-info p {
+            margin: 5px 0;
+            color: #5d5d5d;
+        }
+        .price {
+            font-weight: bold;
+            color: #696969;
+            padding: 5px 0 0 230px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+        }
+        td {
+            padding: 5px 0;
+            color: #434343;
+        }
+        .total td {
+            font-size: 20px;
+            font-weight: bold;
+            color: #09893d;
+        }
+        .shipping-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 80px;
+            color: #5d5d5d;
+        }
+        .shipping-info, .shipping-method {
+            width: 50%;
+        }
+        .shipping-info p, .shipping-method p {
+            margin: 5px 0;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .shipping-info {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="cid:logo.png" alt="">
+        <h2>CHI TIẾT ĐƠN HÀNG</h2>
+        <hr>
+
+        <div class="order-details">
+            {{ORDER_DETAILS}}
+        </div>
+
+        <hr>
+        <table>
+            <tr>
+                <td><strong>Tổng giá trị đơn hàng:</strong></td>
+                <td style="text-align: right; font-weight: 700;">{{TOTAL_PRICE}}</td>
+            </tr>
+            <tr>
+                <td><strong>Khuyến mãi:</strong></td>
+                <td style="text-align: right; font-weight: 700;">{{DISCOUNT_AMOUNT}}</td>
+            </tr>
+            <tr>
+                <td><strong>Phí vận chuyển:</strong></td>
+                <td style="text-align: right; font-weight: 700;">{{SHIPPING_FEE}}</td>
+            </tr>
+            <tr class="total">
+                <td><strong>Tổng thanh toán:</strong></td>
+                <td style="text-align: right;">{{FINAL_AMOUNT}}</td>
+            </tr>
+        </table>
+        
+        <h2>THÔNG TIN GIAO NHẬN</h2>
+        <hr>
+        <div class="shipping-container">
+            <div class="shipping-info">
+                <p><strong>Họ tên:</strong> {{NAME_CLIENT}}</p>
+                <p><strong>Điện thoại:</strong> {{TEL}}</p>
+                <p><strong>Email:</strong> {{GMAIL}}</p>
+            </div>
+            <div class="shipping-method" style="padding: 0 0 0 135px;">
+                <p><strong>Địa chỉ:</strong> {{ADDRESS}}</p>
+                <p><strong>Phương thức vận chuyển:</strong></p>
+                <p>{{DELIVERY_METHOD}}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

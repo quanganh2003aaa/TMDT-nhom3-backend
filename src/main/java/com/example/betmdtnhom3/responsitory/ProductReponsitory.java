@@ -30,22 +30,22 @@ public interface ProductReponsitory extends JpaRepository<Product, String> {
     @Query(value = "SELECT * FROM products WHERE category = 1 ORDER BY RAND() LIMIT 4", nativeQuery = true)
     List<Product> findRandomProducts();
 
-    @Query("SELECT p FROM products p WHERE CAST(p.description AS string) LIKE %:partialId%")
+    @Query("SELECT p FROM products p WHERE CAST(p.id AS string) LIKE %:partialId%")
     Page<Product> findByPartialIdProduct(@Param("partialId") String partialId, Pageable pageable);
 
-    @Query("SELECT p FROM products p WHERE CAST(p.description AS string) LIKE %:partialId% AND p.price BETWEEN :minPrice AND :maxPrice")
+    @Query("SELECT p FROM products p WHERE CAST(p.id AS string) LIKE %:partialId% AND p.price BETWEEN :minPrice AND :maxPrice")
     Page<Product> findByPartialIdProductAndPriceBetween(@Param("partialId") String partialId, @Param("minPrice") double minPrice, @Param("maxPrice") double maxPrice, Pageable pageable);
 
-    @Query("SELECT p FROM products p WHERE CAST(p.description AS string) LIKE %:partialId% AND p.category.id = :category")
+    @Query("SELECT p FROM products p WHERE CAST(p.id AS string) LIKE %:partialId% AND p.category.id = :category")
     Page<Product> findByPartialIdProductAndCategory(@Param("partialId") String partialId, @Param("category") int category, Pageable pageable);
 
-    @Query("SELECT p FROM products p WHERE CAST(p.description AS string) LIKE %:partialId% ORDER BY p.price DESC")
+    @Query("SELECT p FROM products p WHERE CAST(p.id AS string) LIKE %:partialId% ORDER BY p.price DESC")
     Page<Product> findByPartialIdProductOrderByPriceDesc(
             @Param("partialId") String partialId,
             Pageable pageable
     );
 
-    @Query("SELECT p FROM products p WHERE CAST(p.description AS string) LIKE %:partialId% AND p.price BETWEEN :minPrice AND :maxPrice ORDER BY p.price DESC")
+    @Query("SELECT p FROM products p WHERE CAST(p.id AS string) LIKE %:partialId% AND p.price BETWEEN :minPrice AND :maxPrice ORDER BY p.price DESC")
     Page<Product> findByPartialIdProductAndPriceBetweenOrderByPriceDesc(
             @Param("partialId") String partialId,
             @Param("minPrice") double minPrice,
@@ -53,12 +53,12 @@ public interface ProductReponsitory extends JpaRepository<Product, String> {
             Pageable pageable
     );
 
-    @Query("SELECT p FROM products p WHERE CAST(p.description AS string) LIKE %:partialId% ORDER BY p.price ASC")
+    @Query("SELECT p FROM products p WHERE CAST(p.id AS string) LIKE %:partialId% ORDER BY p.price ASC")
     Page<Product> findByPartialIdProductOrderByPriceAsc(
             @Param("partialId") String partialId,
             Pageable pageable);
 
-    @Query("SELECT p FROM products p WHERE CAST(p.description AS string) LIKE %:partialId% AND p.price BETWEEN :minPrice AND :maxPrice ORDER BY p.price ASC")
+    @Query("SELECT p FROM products p WHERE CAST(p.id AS string) LIKE %:partialId% AND p.price BETWEEN :minPrice AND :maxPrice ORDER BY p.price ASC")
     Page<Product> findByPartialIdProductAndPriceBetweenOrderByPriceAsc(
             @Param("partialId") String partialId,
             @Param("minPrice") double minPrice,

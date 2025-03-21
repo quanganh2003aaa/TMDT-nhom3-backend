@@ -14,7 +14,7 @@ public interface ProductServiceImpl {
     Boolean update(String idProduct,List<MultipartFile> file, UpdateProductRequest updateProductRequest);
     Boolean delete(String id);
     ProductDTO getById(String id);
-    List<ProductListDTO> getAllAdmin(String query, int select) ;
+    List<ProductListDTO> getAllAdmin(String query) ;
     List<ProductListDTO> getIndex();
     PagenationDTO getProduct(int page, int filterSort, int filterPrice, String query);
     PagenationDTO getByCategory(int category,int page, int filterSort, int filterPrice);

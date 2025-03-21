@@ -178,20 +178,9 @@ public class ProductService implements ProductServiceImpl {
     }
 
     @Override
-    public List<ProductListDTO> getAllAdmin(String query, int select) {
+    public List<ProductListDTO> getAllAdmin(String query) {
         Pageable pageable = PageRequest.of(0, 12);
-        Page<Product> productsList;
-        switch (select) {
-            case 0 -> productsList = productReponsitory.findByPartialIdProduct(query, pageable);
-            case 1 -> productsList = productReponsitory.findByPartialIdProductAndCategory(query, 1, pageable);
-            case 2 -> productsList = productReponsitory.findByPartialIdProductAndCategory(query, 2, pageable);
-            case 3 -> productsList = productReponsitory.findByPartialIdProductAndCategory(query, 3, pageable);
-            case 4 -> productsList = productReponsitory.findByStatusAndKeyword(StatusProduct.INACTIVE,query,pageable);
-            case 5 -> productsList = productReponsitory.findByPartialIdProductOrderByPriceAsc(query, pageable);
-            case 6 -> productsList = productReponsitory.findByPartialIdProductOrderByPriceDesc(query, pageable);
-            default -> throw new IllegalArgumentException("Lỗi lựa chọn: " + select);
-        }
-
+        Page<Product> productsList = productReponsitory.findByPartialIdProduct(query, pageable);
         List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product product : productsList.getContent()) {
             ProductListDTO productDTO = productMapper.toProductListDTO(product);

@@ -46,10 +46,9 @@ public class ProductController {
     }
 
     @GetMapping("/admin/getAll")
-    public ResponseEntity<?> getAllAdmin(@RequestParam(defaultValue = "", required = false) String query,
-                                         @RequestParam(defaultValue = "0", required = false) int select){
+    public ResponseEntity<?> getAllAdmin(@RequestParam(defaultValue = "", required = false) String query){
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setResult(productService.getAllAdmin(query, select));
+        apiResponse.setResult(productService.getAllAdmin(query));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

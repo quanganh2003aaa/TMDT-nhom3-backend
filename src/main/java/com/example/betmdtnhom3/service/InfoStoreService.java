@@ -13,7 +13,6 @@ import com.example.betmdtnhom3.responsitory.UserReponsitory;
 import com.example.betmdtnhom3.service.impl.InfoStoreServicelmpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,11 +52,8 @@ public class InfoStoreService implements InfoStoreServicelmpl {
         InfoStore infoStore = infoStoreReponsitory.findById(id).orElseThrow(()
                 -> new AppException(ErrorCode.STORE_NOT_FOUND));
 
-        User user = new User();
-        user.setId(updateInfoStoreRequest.getUser());
         infoStore.setTel(updateInfoStoreRequest.getTel());
         infoStore.setAddress(updateInfoStoreRequest.getAddress());
-        infoStore.setUser(user);
         try {
             infoStoreReponsitory.save(infoStore);
             isSuccess = true;

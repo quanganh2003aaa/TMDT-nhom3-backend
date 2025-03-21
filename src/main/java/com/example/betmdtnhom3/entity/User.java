@@ -3,6 +3,7 @@ package com.example.betmdtnhom3.entity;
 import com.example.betmdtnhom3.Enum.Role;
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +23,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
+    @Column(name = "otp")
+    private String otp;
+    @Column(name = "otp_expiration")
+    private LocalDateTime otpExpiration;
 
     @OneToMany(mappedBy = "user")
     private List<InfoUser> infoUsers;
@@ -146,5 +151,21 @@ public class User {
 
     public void setBanners(List<Banner> banners) {
         this.banners = banners;
+    }
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
+
+    public LocalDateTime getOtpExpiration() {
+        return otpExpiration;
+    }
+
+    public void setOtpExpiration(LocalDateTime otpExpiration) {
+        this.otpExpiration = otpExpiration;
     }
 }

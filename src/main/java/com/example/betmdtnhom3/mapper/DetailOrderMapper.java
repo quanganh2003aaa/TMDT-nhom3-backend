@@ -11,6 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface DetailOrderMapper {
     @Mapping(source = "idProductHistory", target = "idProduct")
+    @Mapping(source = "product.name", target = "nameProduct")
     @Mapping(source = "product.price", target = "price")
     @Mapping(source = "size", target = "size")
     @Mapping(source = "quantity", target = "quantity")

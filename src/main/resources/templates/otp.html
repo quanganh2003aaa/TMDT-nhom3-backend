@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác thực OTP</title>
+</head>
+
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px;">
+
+<!-- Wrapper Table -->
+<table align="center" width="100%" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+        <td align="center">
+            <!-- Email Container -->
+            <table width="400" bgcolor="#ffffff" cellpadding="20" cellspacing="0" border="0"
+                   style="border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); text-align: center;">
+                <tr>
+                    <td align="center">
+                        <!-- Logo -->
+                        <img src="cid:logo.png" alt="Logo" width="100" style="margin-bottom: 10px;">
+                        <h2 style="color: #333; margin: 10px 0;">Xác thực OTP</h2>
+                        <p style="font-size: 14px; color: #555;">Hệ thống đã gửi mã OTP 6 số của bạn:</p>
+
+                        <!-- OTP Code -->
+                        <div style="font-size: 28px; font-weight: bold; color: #e74c3c; background: #f8f8f8;
+                                padding: 10px 20px; border-radius: 8px; display: inline-block; margin-top: 10px;
+                                letter-spacing: 5px; box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);">
+                            {{OTP_CODE}}
+                        </div>
+
+                        <p style="font-size: 12px; color: #777; margin-top: 15px;">
+                            Vui lòng không chia sẻ mã OTP này với bất kỳ ai!
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+</body>
+
+</html>

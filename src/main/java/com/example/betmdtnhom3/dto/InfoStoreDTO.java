@@ -1,12 +1,18 @@
 package com.example.betmdtnhom3.dto;
 
-import jakarta.validation.constraints.Pattern;
-
 public class InfoStoreDTO {
-
+    private int id;
     private String address;
     private String user;
     private String tel;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getAddress() {
         return address;

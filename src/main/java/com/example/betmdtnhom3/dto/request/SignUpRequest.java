@@ -13,7 +13,9 @@ public class SignUpRequest {
     @Email(message = "INVALID_GMAIL_FORMAT")
     @Size(max = 100, message = "INVALID_GMAIL_LENGTH")
     private String gmail;
-
+    @NotBlank(message = "INVALID_NAME_USER_EMPTY")
+    @Size(max = 20, message = "INVALID_NAME_CLIENT")
+    private String name;
     public String getPassword() {
         return password;
     }
@@ -36,5 +38,13 @@ public class SignUpRequest {
 
     public void setGmail(String gmail) {
         this.gmail = gmail;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

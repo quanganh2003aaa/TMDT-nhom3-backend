@@ -15,6 +15,7 @@ public enum ErrorCode {
     INVALID_NAME_USER(9003, "Độ dài của tên không phù hợp"),
     INVALID_NOT_EMPTY(9004, "Nội dung là bắt buộc"),
     INVALID_GMAIL(9005, "Lỗi gmail"),
+    INVALID_NAME_CLIENT(9006, "Tên người dùng không quá 20 ký tự"),
     ERROR_OTHER(9999, "Lỗi mới"),
     PRODUCT_EXITED(1111, "Sản phẩm đã tồn tại"),
     PRODUCT_CREATE_ERROR(1112, "Tạo sản phẩm thất bại"),

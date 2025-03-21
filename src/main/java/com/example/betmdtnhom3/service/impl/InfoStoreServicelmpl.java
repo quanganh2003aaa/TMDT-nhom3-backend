@@ -11,5 +11,5 @@ public interface InfoStoreServicelmpl {
     boolean update(int id, UpdateInfoStoreRequest updateInfoStoreRequest);
     boolean delete(int id);
     List<InfoStoreDTO> getAll();
-
+    InfoStoreDTO getById(int id);
 }

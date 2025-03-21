@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class InfoStoreService implements InfoStoreServicelmpl {
     @Autowired
@@ -80,13 +82,18 @@ public class InfoStoreService implements InfoStoreServicelmpl {
 
     @Override
     public List<InfoStoreDTO> getAll() {
-        List<InfoStoreDTO> infoStoreDTOS = new ArrayList<>();
-        List<InfoStore> infoStores = infoStoreReponsitory.findAll();
-        for (InfoStore infoStore: infoStores) {
-            InfoStoreDTO infoStoreDTO = infoStoreMapper.toInfoStoreDTO(infoStore);
-            infoStoreDTOS.add(infoStoreDTO);
-        }
-        return infoStoreDTOS;
+        return infoStoreReponsitory.findAll()
+                .stream()
+                .map(infoStoreMapper::toInfoStoreDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public InfoStoreDTO getById(int id) {
+        InfoStore infoStore = infoStoreReponsitory.findById(id).orElseThrow(
+                ()->new AppException(ErrorCode.STORE_NOT_FOUND)
+        );
+        return infoStoreMapper.toInfoStoreDTO(infoStore);
     }
 
 }

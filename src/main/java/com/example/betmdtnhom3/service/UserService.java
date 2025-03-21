@@ -4,6 +4,7 @@ import com.example.betmdtnhom3.Enum.ErrorCode;
 import com.example.betmdtnhom3.Enum.Role;
 import com.example.betmdtnhom3.dto.UserDTO;
 import com.example.betmdtnhom3.dto.request.AuthenticationRequest;
+import com.example.betmdtnhom3.dto.request.ForgotPasswordRequest;
 import com.example.betmdtnhom3.dto.request.SignUpRequest;
 import com.example.betmdtnhom3.dto.request.UpdateUserRequest;
 import com.example.betmdtnhom3.entity.InfoUser;
@@ -139,6 +140,19 @@ public class UserService implements UserServiceImpl {
             }
         }
         return userDTO;
+    }
+
+    @Override
+    public boolean forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+        User user = userReponsitory.findByGmailAndOtp(forgotPasswordRequest.getGmail(), forgotPasswordRequest.getOtp()).orElseThrow(
+                () -> new AppException(ErrorCode.OTP_INCORRECT)
+        );
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(forgotPasswordRequest.getNewPassword()));
+        user.setOtp(null);
+        user.setOtpExpiration(null);
+        userReponsitory.save(user);
+        return true;
     }
 
     @Override

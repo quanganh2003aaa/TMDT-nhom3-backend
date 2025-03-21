@@ -17,4 +17,5 @@ public interface UserReponsitory extends JpaRepository<User, String> {
 
     Optional<User> findById(String id);
     List<User> findAllByRole(Role role);
+    Optional<User> findByGmailAndOtp(String gmail, String otp);
 }

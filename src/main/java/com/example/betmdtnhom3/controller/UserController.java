@@ -1,10 +1,7 @@
 package com.example.betmdtnhom3.controller;
 
 import com.example.betmdtnhom3.dto.UserDTO;
-import com.example.betmdtnhom3.dto.request.AuthenticationRequest;
-import com.example.betmdtnhom3.dto.request.OTPRequest;
-import com.example.betmdtnhom3.dto.request.SignUpRequest;
-import com.example.betmdtnhom3.dto.request.UpdateUserRequest;
+import com.example.betmdtnhom3.dto.request.*;
 import com.example.betmdtnhom3.payload.ApiResponse;
 import com.example.betmdtnhom3.service.impl.GmailServiceImpl;
 import com.example.betmdtnhom3.service.impl.UserServiceImpl;
@@ -95,5 +92,10 @@ public class UserController {
     @PostMapping("/otp")
     public boolean otp(@RequestBody @Valid OTPRequest otpRequest) throws MessagingException, IOException {
         return gmailService.sendOTPGmail(otpRequest.getGmail());
+    }
+
+    @PostMapping("/newPassword")
+    public boolean otp(@RequestBody @Valid ForgotPasswordRequest forgotPasswordRequest) {
+        return userService.forgotPassword(forgotPasswordRequest);
     }
 }

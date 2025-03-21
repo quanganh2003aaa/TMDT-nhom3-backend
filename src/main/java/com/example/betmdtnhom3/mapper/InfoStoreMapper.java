@@ -7,6 +7,6 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface InfoStoreMapper {
-    @Mapping(source = "user.id", target = "user")
+    @Mapping(source = "user.name", target = "user")
     InfoStoreDTO toInfoStoreDTO (InfoStore infoStore);
 }

@@ -2,6 +2,7 @@ package com.example.betmdtnhom3.service.impl;
 
 import com.example.betmdtnhom3.dto.UserDTO;
 import com.example.betmdtnhom3.dto.request.AuthenticationRequest;
+import com.example.betmdtnhom3.dto.request.ForgotPasswordRequest;
 import com.example.betmdtnhom3.dto.request.SignUpRequest;
 import com.example.betmdtnhom3.dto.request.UpdateUserRequest;
 
@@ -17,5 +18,6 @@ public interface UserServiceImpl {
     Boolean createAdmin(SignUpRequest signUpRequest);
     boolean updateAdmin(String id, UpdateUserRequest request);
     UserDTO getById(String id);
+    boolean forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
     long count();
 }

@@ -45,4 +45,10 @@ public class InfoStoreController {
         apiResponse.setResult(infoStoreService.getAll());
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+    @GetMapping("/id/{id}")
+    public ResponseEntity<?> getById(@PathVariable int id) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(infoStoreService.getById(id));
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 }

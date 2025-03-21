@@ -7,6 +7,8 @@ public enum ErrorCode {
     USER_EXISTED(5111, "Tài khoản đã tồn tại"),
     TEL_EXISTED(5113, "Số điện thoại đã tồn tại"),
     GMAIL_EXISTED(5114, "Gmail đã tồn tại"),
+    OTP_ERROR(5115, "Mã otp không hợp lệ"),
+    OTP_INCORRECT(5116, "Mã otp không đúng"),
     DELETE_USER_ERROR(5112, "Xóa tài khoản thất bại"),
     INVALID_QUANTITY_ORDER(9001, "Số lượng đặt hàng lỗi"),
     INVALID_TEL(9002, "Số điện thoại không đúng định dạng"),

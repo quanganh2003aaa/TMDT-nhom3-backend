@@ -5,7 +5,6 @@ import com.example.betmdtnhom3.Enum.StatusProduct;
 import com.example.betmdtnhom3.dto.ImgProductDTO;
 import com.example.betmdtnhom3.dto.ProductDTO;
 import com.example.betmdtnhom3.dto.ProductListDTO;
-import com.example.betmdtnhom3.dto.SizeDTO;
 import com.example.betmdtnhom3.dto.request.CreateProductRequest;
 import com.example.betmdtnhom3.dto.request.PagenationDTO;
 import com.example.betmdtnhom3.dto.request.UpdateProductRequest;
@@ -31,7 +30,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -184,7 +182,7 @@ public class ProductService implements ProductServiceImpl {
         List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product product : productsList.getContent()) {
             ProductListDTO productDTO = productMapper.toProductListDTO(product);
-            productDTO.setImg(getFirstImage(product));
+            productDTO.setImg(fileImgUtilsHelper.getFirstImage(product));
             productDTO.setRate(rateUtilsHelper.getRate(product));
 
             productDTOList.add(productDTO);
@@ -199,7 +197,7 @@ public class ProductService implements ProductServiceImpl {
         List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product product : randomProducts) {
             ProductListDTO productDTO = productMapper.toProductListDTO(product);
-            productDTO.setImg(getFirstImage(product));
+            productDTO.setImg(fileImgUtilsHelper.getFirstImage(product));
             productDTO.setRate(rateUtilsHelper.getRate(product));
             productDTOList.add(productDTO);
         }
@@ -208,59 +206,38 @@ public class ProductService implements ProductServiceImpl {
     }
 
     @Override
-    public PagenationDTO getProduct(int page, int filterSort, int filterPrice, String query) {
+    public PagenationDTO getProduct(int page, int filterSort, int filterPrice, String query, String brand, String category) {
         Pageable pageable = PageRequest.of(page - 1, 12);
         PagenationDTO pagenationDTO = new PagenationDTO();
-        Page<Product> productsPage = null;
 
-        if (filterSort == 0){
-            productsPage = switch (filterPrice) {
-                case 1 -> productReponsitory.findByPartialIdProductAndPriceBetween
-                        (query, 0, 5000000, pageable);
-                case 2 -> productReponsitory.findByPartialIdProductAndPriceBetween
-                        (query, 5000000, 10000000, pageable);
-                case 3 -> productReponsitory.findByPartialIdProductAndPriceBetween
-                        (query, 10000000, 20000000, pageable);
-                case 4 -> productReponsitory.findByPartialIdProductAndPriceBetween
-                        (query, 20000000, 1000000000, pageable);
-                default -> productReponsitory.findByPartialIdProduct(query, pageable);
-            };
-        } else if (filterSort == 1) {
-            productsPage = switch (filterPrice) {
-                case 1 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceAsc
-                        (query, 0, 5000000, pageable);
-                case 2 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceAsc
-                        (query, 5000000, 10000000, pageable);
-                case 3 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceAsc
-                        (query ,10000000, 20000000, pageable);
-                case 4 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceAsc
-                        (query ,20000000, 1000000000, pageable);
-                default -> productReponsitory.findByPartialIdProductOrderByPriceAsc(query, pageable);
-            };
+        int minPrice = 0, maxPrice = Integer.MAX_VALUE;
+        switch (filterPrice) {
+            case 1 -> maxPrice = 5_000_000;
+            case 2 -> { minPrice = 5_000_000; maxPrice = 10_000_000; }
+            case 3 -> { minPrice = 10_000_000; maxPrice = 20_000_000; }
+            case 4 -> minPrice = 20_000_000;
+        }
+
+        Page<Product> productsPage;
+        if (filterSort == 1) {
+            productsPage = productReponsitory.findByFiltersOrderByPriceAsc(query, minPrice, maxPrice, brand, category, pageable);
+        } else if (filterSort == 2) {
+            productsPage = productReponsitory.findByFiltersOrderByPriceDesc(query, minPrice, maxPrice, brand, category, pageable);
         } else {
-            productsPage = switch (filterPrice) {
-                case 1 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceDesc
-                        (query,0, 5000000, pageable);
-                case 2 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceDesc
-                        (query, 5000000, 10000000, pageable);
-                case 3 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceDesc
-                        (query,10000000, 20000000, pageable);
-                case 4 -> productReponsitory.findByPartialIdProductAndPriceBetweenOrderByPriceDesc
-                        (query,20000000, 1000000000, pageable);
-                default -> productReponsitory.findByPartialIdProductOrderByPriceDesc(query, pageable);
-            };
+            productsPage = productReponsitory.findByFilters(query, minPrice, maxPrice, brand, category, pageable);
         }
 
-        List<ProductListDTO> productDTOList = new ArrayList<>();
-        for (Product products : productsPage) {
-            ProductListDTO productDTO = productMapper.toProductListDTO(products);
-            productDTO.setImg(getFirstImage(products));
-            productDTO.setRate(rateUtilsHelper.getRate(products));
-            productDTOList.add(productDTO);
-        }
+        List<ProductListDTO> productDTOList = productsPage.stream()
+                .map(product -> {
+                    ProductListDTO productDTO = productMapper.toProductListDTO(product);
+                    productDTO.setImg(fileImgUtilsHelper.getFirstImage(product));
+                    productDTO.setRate(rateUtilsHelper.getRate(product));
+                    return productDTO;
+                })
+                .collect(Collectors.toList());
+
         pagenationDTO.setTotalPages(productsPage.getTotalPages());
         pagenationDTO.setObjectList(productDTOList);
-
         return pagenationDTO;
     }
 
@@ -313,7 +290,7 @@ public class ProductService implements ProductServiceImpl {
         List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product products : productsPage) {
             ProductListDTO productDTO = productMapper.toProductListDTO(products);
-            productDTO.setImg(getFirstImage(products));
+            productDTO.setImg(fileImgUtilsHelper.getFirstImage(products));
             productDTO.setRate(rateUtilsHelper.getRate(products));
             productDTOList.add(productDTO);
         }
@@ -372,7 +349,7 @@ public class ProductService implements ProductServiceImpl {
         List<ProductListDTO> productDTOList = new ArrayList<>();
         for (Product products : productsPage) {
             ProductListDTO productDTO = productMapper.toProductListDTO(products);
-            productDTO.setImg(getFirstImage(products));
+            productDTO.setImg(fileImgUtilsHelper.getFirstImage(products));
             productDTO.setRate(rateUtilsHelper.getRate(products));
             productDTOList.add(productDTO);
         }
@@ -387,12 +364,5 @@ public class ProductService implements ProductServiceImpl {
         return productReponsitory.count();
     }
 
-    public String getFirstImage(Product product) {
-        return product.getImgProducts()
-                .stream()
-                .filter(img -> img.getIndexImg() == 0)
-                .map(ImgProduct::getImg)
-                .findFirst()
-                .orElse(null);
-    }
+
 }

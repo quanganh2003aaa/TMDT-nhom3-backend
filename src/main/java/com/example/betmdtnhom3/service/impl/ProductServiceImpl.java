@@ -16,8 +16,9 @@ public interface ProductServiceImpl {
     ProductDTO getById(String id);
     List<ProductListDTO> getAllAdmin(String query) ;
     List<ProductListDTO> getIndex();
-    PagenationDTO getProduct(int page, int filterSort, int filterPrice, String query);
-    PagenationDTO getByCategory(int category,int page, int filterSort, int filterPrice);
+    PagenationDTO getProduct(int page, int filterSort, int filterPrice, String query, String brand, String category);
+
+    PagenationDTO getByCategory(int category, int page, int filterSort, int filterPrice);
     PagenationDTO getByBrand(int brand, int page, int filterSort, int filterPrice);
     long countProducts();
 }

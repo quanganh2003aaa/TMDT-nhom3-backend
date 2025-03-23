@@ -2,7 +2,7 @@ package com.example.betmdtnhom3.dto.request;
 
 public class ChangeStatusRefundRequest {
     private String idUser;
-    private int idRefund;
+    private int idOrder;
 
     public String getIdUser() {
         return idUser;
@@ -12,11 +12,11 @@ public class ChangeStatusRefundRequest {
         this.idUser = idUser;
     }
 
-    public int getIdRefund() {
-        return idRefund;
+    public int getIdOrder() {
+        return idOrder;
     }
 
-    public void setIdRefund(int idRefund) {
-        this.idRefund = idRefund;
+    public void setIdOrder(int idOrder) {
+        this.idOrder = idOrder;
     }
 }

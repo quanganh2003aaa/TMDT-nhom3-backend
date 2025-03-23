@@ -218,6 +218,9 @@ public class ProductService implements ProductServiceImpl {
             case 4 -> minPrice = 20_000_000;
         }
 
+        if (brand == null || brand.isEmpty()) brand = "0";
+        if (category == null || category.isEmpty()) category = "0";
+
         Page<Product> productsPage;
         if (filterSort == 1) {
             productsPage = productReponsitory.findByFiltersOrderByPriceAsc(query, minPrice, maxPrice, brand, category, pageable);
@@ -240,6 +243,7 @@ public class ProductService implements ProductServiceImpl {
         pagenationDTO.setObjectList(productDTOList);
         return pagenationDTO;
     }
+
 
     @Override
     public PagenationDTO getByCategory(int category, int page, int filterSort, int filterPrice) {

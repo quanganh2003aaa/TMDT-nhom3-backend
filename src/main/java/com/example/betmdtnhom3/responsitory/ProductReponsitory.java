@@ -157,8 +157,8 @@ public interface ProductReponsitory extends JpaRepository<Product, String> {
     @Query("SELECT p FROM products p WHERE " +
             "(LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR :query IS NULL) " +
             "AND (p.price BETWEEN :minPrice AND :maxPrice) " +
-            "AND (:brand IS NULL OR p.brand.name = :brand) " +
-            "AND (:category IS NULL OR p.category.name = :category)")
+            "AND (:brand = '0' OR p.brand.name = :brand) " +
+            "AND (:category = '0' OR p.category.name = :category)")
     Page<Product> findByFilters(@Param("query") String query,
                                 @Param("minPrice") int minPrice,
                                 @Param("maxPrice") int maxPrice,
@@ -169,8 +169,8 @@ public interface ProductReponsitory extends JpaRepository<Product, String> {
     @Query("SELECT p FROM products p WHERE " +
             "(LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR :query IS NULL) " +
             "AND (p.price BETWEEN :minPrice AND :maxPrice) " +
-            "AND (:brand IS NULL OR p.brand.name = :brand) " +
-            "AND (:category IS NULL OR p.category.name = :category) " +
+            "AND (:brand = '0' OR p.brand.name = :brand) " +
+            "AND (:category = '0' OR p.category.name = :category) " +
             "ORDER BY p.price ASC")
     Page<Product> findByFiltersOrderByPriceAsc(@Param("query") String query,
                                                @Param("minPrice") int minPrice,
@@ -182,8 +182,8 @@ public interface ProductReponsitory extends JpaRepository<Product, String> {
     @Query("SELECT p FROM products p WHERE " +
             "(LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR :query IS NULL) " +
             "AND (p.price BETWEEN :minPrice AND :maxPrice) " +
-            "AND (:brand IS NULL OR p.brand.name = :brand) " +
-            "AND (:category IS NULL OR p.category.name = :category) " +
+            "AND (:brand = '0' OR p.brand.name = :brand) " +
+            "AND (:category = '0' OR p.category.name = :category) " +
             "ORDER BY p.price DESC")
     Page<Product> findByFiltersOrderByPriceDesc(@Param("query") String query,
                                                 @Param("minPrice") int minPrice,

@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,6 +79,7 @@ public class CommentBlogService implements CommentBlogServiceImpl {
     @Override
     public List<CommentBlogDTO> getAllCommentBlog(String query, int select) {
         List<CommentBlog> comments = commentBlogRepository.findAll();
+        Collections.reverse(comments);
         return comments.stream()
                 .map(commentBlogMapper::toCmtBlogDTO)
                 .collect(Collectors.toList());
@@ -89,6 +91,7 @@ public class CommentBlogService implements CommentBlogServiceImpl {
                 () -> new AppException(ErrorCode.BLOG_NOT_FOUND)
         );
         List<CommentBlog> comments = commentBlogRepository.findByBlog(blog);
+        Collections.reverse(comments);
         return comments.stream()
                 .map(commentBlogMapper::toCmtBlogDTO)
                 .collect(Collectors.toList());
@@ -100,6 +103,7 @@ public class CommentBlogService implements CommentBlogServiceImpl {
                 () -> new AppException(ErrorCode.USER_NOT_FOUND)
         );
         List<CommentBlog> comments = commentBlogRepository.findByUser(user);
+        Collections.reverse(comments);
         return comments.stream()
                 .map(commentBlogMapper::toCmtBlogDTO)
                 .collect(Collectors.toList());

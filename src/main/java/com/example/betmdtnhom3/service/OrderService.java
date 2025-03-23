@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -70,7 +71,7 @@ public class OrderService implements OrderServiceImpl {
     public PagenationDTO getAllOrder(int page) {
         Pageable pageable = PageRequest.of(page - 1, 5, Sort.by(Sort.Direction.DESC, "date"));
         PagenationDTO pagenationDTO = new PagenationDTO();
-        Page<Order> ordersPage = orderReponsitory.findAll(pageable);
+        Page<Order> ordersPage = orderReponsitory.findAllExcludeStatuses(pageable);
         List<OrderListDTO> orderListDTOList = new ArrayList<>();
         for (Order order: ordersPage) {
             OrderListDTO orderListDTO = orderMapper.toOderList(order);
@@ -85,9 +86,10 @@ public class OrderService implements OrderServiceImpl {
     public PagenationDTO getOrderSearch(int page, String query, int select) {
         Pageable pageable = PageRequest.of(page - 1, 5, Sort.by(Sort.Direction.DESC, "date"));
         PagenationDTO pagenationDTO = new PagenationDTO();
+        List<Integer> excludedStatuses = Arrays.asList(6, 7, 8, 9, 10);
         Page<Order> ordersPage;
         if (select == 0){
-            ordersPage = orderReponsitory.findByPartialIdOrder(query, pageable);
+            ordersPage = orderReponsitory.findByPartialIdOrderAndExcludeStatuses(query, excludedStatuses, pageable);
         } else {
             ordersPage = orderReponsitory.findByPartialIdOrderAndStatusOrders(query, select, pageable);
         }

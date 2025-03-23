@@ -54,20 +54,20 @@ public class OrderRefundService implements OrderRefundServiceImpl {
             throw new AppException(ErrorCode.ORDER_NOT_FOUND);
         }
 
-        if (order.getStatusOrder().getId() != 4) {
+        if (order.getStatusOrder().getId() == 4) {
+            order.setStatusOrder(new StatusOrder(6));
+
+            OrderRefund orderRefund = new OrderRefund();
+            orderRefund.setOrder(order);
+            orderRefund.setCreatedAt(LocalDateTime.now());
+            orderRefund.setRevenue(order.getRevenue());
+            orderRefund.setReason(new Reason(createOrderRefundRequest.getReason()));
+
+            orderReponsitory.save(order);
+            orderRefundReponsitory.save(orderRefund);
+        }else {
             throw new AppException(ErrorCode.ORDER_ERROR);
         }
-
-        order.setStatusOrder(new StatusOrder(6));
-
-        OrderRefund orderRefund = new OrderRefund();
-        orderRefund.setOrder(order);
-        orderRefund.setCreatedAt(LocalDateTime.now());
-        orderRefund.setRevenue(order.getRevenue());
-        orderRefund.setReason(new Reason(createOrderRefundRequest.getReason()));
-
-        orderReponsitory.save(order);
-        orderRefundReponsitory.save(orderRefund);
 
         return true;
     }

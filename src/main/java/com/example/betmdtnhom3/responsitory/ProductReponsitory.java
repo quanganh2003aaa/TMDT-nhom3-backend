@@ -157,39 +157,39 @@ public interface ProductReponsitory extends JpaRepository<Product, String> {
     @Query("SELECT p FROM products p WHERE " +
             "(LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR :query IS NULL) " +
             "AND (p.price BETWEEN :minPrice AND :maxPrice) " +
-            "AND (:brand = '0' OR p.brand.name = :brand) " +
-            "AND (:category = '0' OR p.category.name = :category)")
+            "AND (:brandId = 0 OR p.brand.id = :brandId) " +
+            "AND (:categoryId = 0 OR p.category.id = :categoryId)")
     Page<Product> findByFilters(@Param("query") String query,
                                 @Param("minPrice") int minPrice,
                                 @Param("maxPrice") int maxPrice,
-                                @Param("brand") String brand,
-                                @Param("category") String category,
+                                @Param("brandId") int brandId,
+                                @Param("categoryId") int categoryId,
                                 Pageable pageable);
 
     @Query("SELECT p FROM products p WHERE " +
             "(LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR :query IS NULL) " +
             "AND (p.price BETWEEN :minPrice AND :maxPrice) " +
-            "AND (:brand = '0' OR p.brand.name = :brand) " +
-            "AND (:category = '0' OR p.category.name = :category) " +
+            "AND (:brandId = 0 OR p.brand.id = :brandId) " +
+            "AND (:categoryId = 0 OR p.category.id = :categoryId) " +
             "ORDER BY p.price ASC")
     Page<Product> findByFiltersOrderByPriceAsc(@Param("query") String query,
                                                @Param("minPrice") int minPrice,
                                                @Param("maxPrice") int maxPrice,
-                                               @Param("brand") String brand,
-                                               @Param("category") String category,
+                                               @Param("brandId") int brandId,
+                                               @Param("categoryId") int categoryId,
                                                Pageable pageable);
 
     @Query("SELECT p FROM products p WHERE " +
             "(LOWER(p.name) LIKE LOWER(CONCAT('%', :query, '%')) OR :query IS NULL) " +
             "AND (p.price BETWEEN :minPrice AND :maxPrice) " +
-            "AND (:brand = '0' OR p.brand.name = :brand) " +
-            "AND (:category = '0' OR p.category.name = :category) " +
+            "AND (:brandId = 0 OR p.brand.id = :brandId) " +
+            "AND (:categoryId = 0 OR p.category.id = :categoryId) " +
             "ORDER BY p.price DESC")
     Page<Product> findByFiltersOrderByPriceDesc(@Param("query") String query,
                                                 @Param("minPrice") int minPrice,
                                                 @Param("maxPrice") int maxPrice,
-                                                @Param("brand") String brand,
-                                                @Param("category") String category,
+                                                @Param("brandId") int brandId,
+                                                @Param("categoryId") int categoryId,
                                                 Pageable pageable);
 
 }

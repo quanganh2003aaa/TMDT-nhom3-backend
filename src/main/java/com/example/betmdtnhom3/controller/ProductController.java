@@ -77,8 +77,8 @@ public class ProductController {
                                         @RequestParam(defaultValue = "0", required = false) int filterSort,
                                         @RequestParam(defaultValue = "0", required = false) int filterPrice,
                                         @RequestParam(defaultValue = "", required = false) String query,
-                                        @RequestParam(defaultValue = "", required = false) String brand,
-                                        @RequestParam(defaultValue = "", required = false) String category){
+                                        @RequestParam(defaultValue = "0", required = false) int brand,
+                                        @RequestParam(defaultValue = "0", required = false) int category){
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(productService.getProduct(page, filterSort, filterPrice, query, brand, category));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);

@@ -206,7 +206,7 @@ public class ProductService implements ProductServiceImpl {
     }
 
     @Override
-    public PagenationDTO getProduct(int page, int filterSort, int filterPrice, String query, String brand, String category) {
+    public PagenationDTO getProduct(int page, int filterSort, int filterPrice, String query, int brandId, int categoryId) {
         Pageable pageable = PageRequest.of(page - 1, 12);
         PagenationDTO pagenationDTO = new PagenationDTO();
 
@@ -218,16 +218,13 @@ public class ProductService implements ProductServiceImpl {
             case 4 -> minPrice = 20_000_000;
         }
 
-        if (brand == null || brand.isEmpty()) brand = "0";
-        if (category == null || category.isEmpty()) category = "0";
-
         Page<Product> productsPage;
         if (filterSort == 1) {
-            productsPage = productReponsitory.findByFiltersOrderByPriceAsc(query, minPrice, maxPrice, brand, category, pageable);
+            productsPage = productReponsitory.findByFiltersOrderByPriceAsc(query, minPrice, maxPrice, brandId, categoryId, pageable);
         } else if (filterSort == 2) {
-            productsPage = productReponsitory.findByFiltersOrderByPriceDesc(query, minPrice, maxPrice, brand, category, pageable);
+            productsPage = productReponsitory.findByFiltersOrderByPriceDesc(query, minPrice, maxPrice, brandId, categoryId, pageable);
         } else {
-            productsPage = productReponsitory.findByFilters(query, minPrice, maxPrice, brand, category, pageable);
+            productsPage = productReponsitory.findByFilters(query, minPrice, maxPrice, brandId, categoryId, pageable);
         }
 
         List<ProductListDTO> productDTOList = productsPage.stream()
@@ -243,7 +240,6 @@ public class ProductService implements ProductServiceImpl {
         pagenationDTO.setObjectList(productDTOList);
         return pagenationDTO;
     }
-
 
     @Override
     public PagenationDTO getByCategory(int category, int page, int filterSort, int filterPrice) {

@@ -14,6 +14,8 @@ import java.util.List;
 
 @Repository
 public interface OrderReponsitory extends JpaRepository<Order, Integer> {
+    @Query("SELECT o FROM orders o WHERE o.statusOrder.id NOT IN (6, 7, 8, 9, 10)")
+    Page<Order> findAllExcludeStatuses(Pageable pageable);
     Page<Order> findAllByStatusOrderNot(StatusOrder statusOrder, Pageable pageable);
     Page<Order> findAllByStatusOrder(StatusOrder statusOrders, Pageable pageable);
     List<Order> findAllByUserOrderByDateDesc(User user);
@@ -23,6 +25,11 @@ public interface OrderReponsitory extends JpaRepository<Order, Integer> {
     Page<Order> findByPartialIdOrderAndStatusOrders(@Param("partialId") String partialId,
                                                     @Param("statusOrder") int status,
                                                     Pageable pageable);
+    @Query("SELECT p FROM orders p WHERE CAST(p.id AS string) LIKE %:partialId% AND p.statusOrder.id NOT IN :excludedStatuses")
+    Page<Order> findByPartialIdOrderAndExcludeStatuses(@Param("partialId") String partialId,
+                                                       @Param("excludedStatuses") List<Integer> excludedStatuses,
+                                                       Pageable pageable);
+
     Order findByIdAndUser(int id, User user);
 
 }

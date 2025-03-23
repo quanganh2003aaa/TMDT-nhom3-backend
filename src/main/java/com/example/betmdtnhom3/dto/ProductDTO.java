@@ -8,8 +8,8 @@ public class ProductDTO {
     private String id;
     private String name;
     private List<ImgProductDTO> img;
-    private int brand;
-    private int category;
+    private String brand;
+    private String category;
     private int price;
     private StatusProduct status;
     private String description;
@@ -40,19 +40,19 @@ public class ProductDTO {
         this.img = img;
     }
 
-    public int getBrand() {
+    public String getBrand() {
         return brand;
     }
 
-    public void setBrand(int brand) {
+    public void setBrand(String brand) {
         this.brand = brand;
     }
 
-    public int getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(int category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 

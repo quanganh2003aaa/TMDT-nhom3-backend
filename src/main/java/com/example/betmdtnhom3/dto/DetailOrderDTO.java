@@ -3,6 +3,7 @@ package com.example.betmdtnhom3.dto;
 public class DetailOrderDTO {
     private String idProduct;
     private String nameProduct;
+    private String img;
     private int quantity;
     private int price;
     private String size;
@@ -45,5 +46,13 @@ public class DetailOrderDTO {
 
     public void setNameProduct(String nameProduct) {
         this.nameProduct = nameProduct;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

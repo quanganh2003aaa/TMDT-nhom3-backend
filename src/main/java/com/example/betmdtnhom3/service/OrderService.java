@@ -14,6 +14,7 @@ import com.example.betmdtnhom3.mapper.OrderMapper;
 import com.example.betmdtnhom3.responsitory.*;
 import com.example.betmdtnhom3.service.impl.GmailServiceImpl;
 import com.example.betmdtnhom3.service.impl.OrderServiceImpl;
+import com.example.betmdtnhom3.utils.FileImgUtilsHelper;
 import com.example.betmdtnhom3.utils.SizeUtilsHelper;
 import com.example.betmdtnhom3.utils.VoucherUtilsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,8 @@ public class OrderService implements OrderServiceImpl {
     CartReponsitory cartReponsitory;
     @Autowired
     GmailServiceImpl gmailService;
+    @Autowired
+    FileImgUtilsHelper fileImgUtilsHelper;
 
     @Override
     public PagenationDTO getAllOrder(int page) {
@@ -123,7 +126,11 @@ public class OrderService implements OrderServiceImpl {
         OrderDTO orderDTO = orderMapper.toOrder(order);
 
         List<DetailOrderDTO> detailOrderDTOList = order.getDetails().stream()
-                .map(detailOrderMapper::toDTO)
+                .map(detail -> {
+                    DetailOrderDTO dto = detailOrderMapper.toDTO(detail);
+                    dto.setImg(fileImgUtilsHelper.getFirstImage(detail.getProduct()));
+                    return dto;
+                })
                 .collect(Collectors.toList());
 
         orderDTO.setDetailOrderDTOList(detailOrderDTOList);

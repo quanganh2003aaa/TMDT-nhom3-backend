@@ -51,4 +51,12 @@ public class FileImgUtilsHelper {
         imgProductReponsitory.saveAll(imgProducts);
     }
 
+    public String getFirstImage(Product product) {
+        return product.getImgProducts()
+                .stream()
+                .filter(img -> img.getIndexImg() == 0)
+                .map(ImgProduct::getImg)
+                .findFirst()
+                .orElse(null);
+    }
 }

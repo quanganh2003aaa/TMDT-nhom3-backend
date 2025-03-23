@@ -94,8 +94,11 @@ public class OrderRefundService implements OrderRefundServiceImpl {
     public Boolean deliverOrder(ChangeStatusRefundRequest changeStatusRefundRequest) {
         User user = userReponsitory.findById(changeStatusRefundRequest.getIdUser())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Order order = orderReponsitory.findById(changeStatusRefundRequest.getIdOrder()).orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+        );
 
-        OrderRefund orderRefund = orderRefundReponsitory.findByIdAndOrderUser(changeStatusRefundRequest.getIdRefund(), user)
+        OrderRefund orderRefund = orderRefundReponsitory.findByOrderAndOrder_User(order, user)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         if (orderRefund.getOrder().getStatusOrder().getId() != 7) {
@@ -152,9 +155,12 @@ public class OrderRefundService implements OrderRefundServiceImpl {
         User user = userReponsitory.findById(changeStatusRefundRequest.getIdUser())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        OrderRefund orderRefund = orderRefundReponsitory.findByIdAndOrderUser(changeStatusRefundRequest.getIdRefund(), user)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_ERROR));
+        Order order = orderReponsitory.findById(changeStatusRefundRequest.getIdOrder()).orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+        );
 
+        OrderRefund orderRefund = orderRefundReponsitory.findByOrderAndOrder_User(order, user)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         if (orderRefund.getOrder().getStatusOrder().getId() != 6) {
             throw new AppException(ErrorCode.ORDER_REFUND_ERROR);
         }

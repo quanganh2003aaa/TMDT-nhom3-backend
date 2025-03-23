@@ -1,5 +1,6 @@
 package com.example.betmdtnhom3.responsitory;
 
+import com.example.betmdtnhom3.entity.Order;
 import com.example.betmdtnhom3.entity.OrderRefund;
 import com.example.betmdtnhom3.entity.User;
 import org.springframework.data.domain.Page;
@@ -20,4 +21,5 @@ public interface OrderRefundReponsitory extends JpaRepository<OrderRefund, Integ
     Page<OrderRefund> findByPartialIdOrderAndStatusOrders(@Param("partialId") String partialId, @Param("statusOrder") int status, Pageable pageable);
 
     Optional<OrderRefund> findByIdAndOrderUser(int id, User user);
+    Optional<OrderRefund> findByOrderAndOrder_User(Order order, User user);
 }

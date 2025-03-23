@@ -7,7 +7,7 @@ public class CreateRateProductRequest {
     @Min(value = 1, message = "NUMBER_RATE_ERROR")
     private int rate;
     @NotBlank(message = "CONTENT_RATE_EMPTY")
-    @Size(min = 5, max = 255, message = "CONTENT_RATE_LENGTH_ERROR")
+    @Size(min = 0, max = 255, message = "CONTENT_RATE_LENGTH_ERROR")
     private String content;
     @NotBlank(message = "USER_EMPTY")
     private String user;

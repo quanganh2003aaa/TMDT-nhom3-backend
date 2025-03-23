@@ -75,7 +75,10 @@ public class OrderRefundService implements OrderRefundServiceImpl {
     @Transactional(rollbackFor = {AppException.class, IOException.class, SQLException.class})
     @Override
     public Boolean confirmOrderRefund(int id) {
-        OrderRefund orderRefund = orderRefundReponsitory.findById(id)
+        Order order = orderReponsitory.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+        );
+        OrderRefund orderRefund = orderRefundReponsitory.findByOrder(order)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         if (orderRefund.getOrder().getStatusOrder().getId() != 6) {
@@ -115,8 +118,11 @@ public class OrderRefundService implements OrderRefundServiceImpl {
     @Transactional(rollbackFor = {AppException.class, IOException.class, SQLException.class})
     @Override
     public Boolean successOrderRefund(int id) {
-        OrderRefund orderRefund = orderRefundReponsitory.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_ERROR));
+        Order order = orderReponsitory.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+        );
+        OrderRefund orderRefund = orderRefundReponsitory.findByOrder(order)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         if (orderRefund.getOrder().getStatusOrder().getId() != 8) {
             throw new AppException(ErrorCode.ORDER_REFUND_ERROR);
@@ -136,8 +142,11 @@ public class OrderRefundService implements OrderRefundServiceImpl {
 
     @Override
     public Boolean rejectOrderRefund(int id) {
-        OrderRefund orderRefund = orderRefundReponsitory.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_ERROR));
+        Order order = orderReponsitory.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
+        );
+        OrderRefund orderRefund = orderRefundReponsitory.findByOrder(order)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
 
         if (orderRefund.getOrder().getStatusOrder().getId() != 6) {
             throw new AppException(ErrorCode.ORDER_REFUND_ERROR);
@@ -174,11 +183,13 @@ public class OrderRefundService implements OrderRefundServiceImpl {
     @Override
     public Boolean deleteOrderRefund(int id) {
         boolean isSuccess = false;
-        OrderRefund orders = orderRefundReponsitory.findById(id).orElseThrow(
+        Order order = orderReponsitory.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.ORDER_NOT_FOUND)
         );
+        OrderRefund orderRefund = orderRefundReponsitory.findByOrder(order)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         try {
-            orderRefundReponsitory.delete(orders);
+            orderRefundReponsitory.delete(orderRefund);
             isSuccess = true;
         }catch (Exception e){
             throw new AppException(ErrorCode.DELETE_ORDER_ERROR);

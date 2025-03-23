@@ -20,6 +20,6 @@ public interface OrderRefundReponsitory extends JpaRepository<OrderRefund, Integ
     @Query("SELECT p FROM order_refund p WHERE CAST(p.id AS string) LIKE %:partialId% AND p.order.statusOrder.id = :statusOrder")
     Page<OrderRefund> findByPartialIdOrderAndStatusOrders(@Param("partialId") String partialId, @Param("statusOrder") int status, Pageable pageable);
 
-    Optional<OrderRefund> findByIdAndOrderUser(int id, User user);
+    Optional<OrderRefund> findByOrder(Order order);
     Optional<OrderRefund> findByOrderAndOrder_User(Order order, User user);
 }

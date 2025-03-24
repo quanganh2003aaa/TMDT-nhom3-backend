@@ -10,6 +10,8 @@ import com.example.betmdtnhom3.dto.request.PagenationDTO;
 import com.example.betmdtnhom3.dto.request.UpdateProductRequest;
 import com.example.betmdtnhom3.entity.*;
 import com.example.betmdtnhom3.exception.AppException;
+import com.example.betmdtnhom3.mapper.BrandMapper;
+import com.example.betmdtnhom3.mapper.CategoryMapper;
 import com.example.betmdtnhom3.mapper.ProductMapper;
 import com.example.betmdtnhom3.responsitory.ImgProductReponsitory;
 import com.example.betmdtnhom3.responsitory.ProductReponsitory;
@@ -38,6 +40,10 @@ public class ProductService implements ProductServiceImpl {
     ProductReponsitory productReponsitory;
     @Autowired
     ProductMapper productMapper;
+    @Autowired
+    BrandMapper brandMapper;
+    @Autowired
+    CategoryMapper categoryMapper;
     @Autowired
     FileServiceImpl fileService;
     @Autowired
@@ -138,6 +144,8 @@ public class ProductService implements ProductServiceImpl {
     public ProductDTO getById(String id) {
         Product products = productReponsitory.findById(id).orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         ProductDTO productDTO = productMapper.toProductDTO(products);
+        productDTO.setBrand(brandMapper.toBrandDTO(products.getBrand()));
+        productDTO.setCategory(categoryMapper.toCateDTO(products.getCategory()));
         List<Size> sizesList = sizeReponsitory.findAllByProduct(products);
 
         if (sizesList.isEmpty()){

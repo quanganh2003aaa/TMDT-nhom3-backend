@@ -20,7 +20,7 @@ public class BrandController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<?> getById(@PathVariable int id) {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(brandService.getBrandById(id));

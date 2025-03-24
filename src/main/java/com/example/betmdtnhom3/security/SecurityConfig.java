@@ -25,10 +25,41 @@ public class SecurityConfig {
     @Autowired
     CustomJwtDecoder customJwtDecoder;
 
+    private final String[] PUBLIC_ENDPOINTS = {
+            "/api/auth/login", "/api/auth/introspect",
+            "/api/blog/id/**","/api/blog/getAll",
+            "/api/brand/getAll",
+            "/api/category/getAll",
+            "/api/comment/getAll","/api/comment/blog/**",
+            "/api/delivery/getAll",
+            "/api/store/getAll",
+            "/api/product/getIndex","/api/product/id/**","/api/product/getProduct","/api/product/getCategory","/api/product/getBrand",
+            "/api/rate/product/**",
+            "/api/user/create","/api/user/login","/api/user/otp","/api/user/newPassword",
+            "/api/voucher/getAll",
+            "/vnpay/vn-pay-callback"
+    };
+
+    private final String[] ADMIN_ENDPOINTS = {
+            "/api/blog/create","/api/blog/update/**","/api/blog/delete/**",
+            "/api/brand/create","/api/brand/update/**","/api/brand/delete/**","/api/brand/id/**",
+            "/api/category/create","/api/category/update/**","/api/category/delete/**","/api/category/id/**",
+            "/api/delivery/create","/api/delivery/update/**","/api/delivery/delete/**","/api/delivery/id/**",
+            "/api/store/create","/api/store/update/**","/api/store/delete/**","/api/store/id/**",
+            "/api/order/getAll","/api/order/confirm/**","/api/order/deliver/**","/api/order/delete/**","/api/order/getOrderSearch","/api/order/count",
+            "/api/refund/getAll","/api/refund/confirm/**","/api/refund/deliver","/api/refund/success/**","/api/refund/reject/**","/api/refund/delete/**",
+            "/api/product/create","/api/product/update/**","/api/product/delete/**","/api/product/id/**","/api/product/admin/getAll","/api/product/count",
+            "/revenue/**",
+            "/api/user/createAdmin","/api/user/updateAdmin/**","/api/user/delete/**","/api/user/delete/**","/api/user/list/**","/api/user/count",
+            "/api/voucher/id/**","/api/voucher/create","/api/voucher/update/**","/api/voucher/delete/**",
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                authorizationManagerRequestMatcherRegistry.anyRequest().permitAll());
+                authorizationManagerRequestMatcherRegistry.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(ADMIN_ENDPOINTS).hasAnyAuthority("ADMIN")
+                        .anyRequest().authenticated());
         http.csrf(AbstractHttpConfigurer::disable);
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer ->

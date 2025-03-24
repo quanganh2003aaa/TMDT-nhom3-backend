@@ -23,7 +23,7 @@ public class DeliveryMethodController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<?> getById(@PathVariable int id) {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(deliveryMethodService.getById(id));

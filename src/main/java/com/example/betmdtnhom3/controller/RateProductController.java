@@ -16,14 +16,14 @@ public class RateProductController {
     @Autowired
     RateProductServiceImpl rateProductService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/product/{id}")
     public ResponseEntity<?> getOrderById(@PathVariable String id, @RequestParam(defaultValue = "1", required = false) int page){
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(rateProductService.getByProduct(id, page));
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("user/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<?> getByUser(@PathVariable String id, @RequestParam(defaultValue = "1", required = false) int page){
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(rateProductService.getByUser(id, page));
